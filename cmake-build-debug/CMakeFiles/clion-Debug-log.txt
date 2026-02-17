@@ -12,6 +12,6 @@
 -- Found OpenSSL: /opt/homebrew/lib/libcrypto.dylib (found version "3.6.1")
 -- Found c-ares: /opt/homebrew/lib/cmake/c-ares/c-ares-config.cmake (found version "1.34.6")
 -- Found RE2 via CMake.
--- Configuring done (0.7s)
+-- Configuring done (0.8s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug

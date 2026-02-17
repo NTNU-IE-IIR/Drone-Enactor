@@ -7,7 +7,8 @@
 
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/action/action.h>
-
+#include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/offboard/offboard.h>
 #include "drone_control.grpc.pb.h"
 
 using namespace std::chrono_literals;
@@ -63,7 +64,13 @@ static std::shared_ptr<mavsdk::System> wait_for_autopilot(mavsdk::Mavsdk& mavsdk
 
 class DroneControlService final : public drone::DroneControl::Service {
 public:
-    explicit DroneControlService(mavsdk::Action& action) : _action(action) {}
+    explicit DroneControlService(mavsdk::Action& action, mavsdk::Telemetry& telemetry, mavsdk::System& system)
+                                : _action(action), _telemetry(telemetry), _system(system) {}
+
+private: mavsdk::Action& _action;
+    mavsdk::Telemetry& _telemetry;
+    mavsdk::System& _system;
+
 
     grpc::Status Enqueue(grpc::ServerContext*,
                          const drone::Command* req,
@@ -71,30 +78,18 @@ public:
     {
         reply->set_id(req->id());
 
-        // For now: execute immediately (no queue yet)
         if (req->has_hover()) {
             const double seconds = req->hover().seconds();
             std::cout << "[API] Hover request: " << seconds << "s\n";
 
-            auto r = _action.arm();
-            if (r != mavsdk::Action::Result::Success) {
-                reply->set_accepted(false);
-                reply->set_message(std::string("Arm failed: ") + action_result_to_string(r));
+            if (!ensure_airborn_or_reply(reply)) {
                 return grpc::Status::OK;
             }
 
-            r = _action.takeoff();
-            if (r != mavsdk::Action::Result::Success) {
-                reply->set_accepted(false);
-                reply->set_message(std::string("Takeoff failed: ") + action_result_to_string(r));
-                return grpc::Status::OK;
-            }
-
-            // Give it a moment to climb, then wait requested time
             std::this_thread::sleep_for(3s);
             std::this_thread::sleep_for(std::chrono::duration<double>(seconds));
 
-            r = _action.land();
+            auto r = _action.land();
             if (r != mavsdk::Action::Result::Success) {
                 reply->set_accepted(false);
                 reply->set_message(std::string("Land failed: ") + action_result_to_string(r));
@@ -105,17 +100,63 @@ public:
             reply->set_message("Executed: arm -> takeoff -> wait -> land");
             return grpc::Status::OK;
         }
+        if (req->has_flyforward()) {
+            mavsdk::Offboard offboard {_system};
+            if (!ensure_airborn_or_reply(reply)) {
+                return grpc::Status::OK;
+            }
+            if (!wait_until_ready_for_offboard(reply)) {
+                return grpc::Status::OK;
+            }
+            const double seconds = req -> flyforward().seconds();
+            const double velocity = req -> flyforward().velocity();
+            std::cout << "[API] Fly forward request for " << seconds
+            << "s seconds and velocity " << velocity << "m/s\n";
 
+            grpc::Status value;
+            mavsdk::Offboard::VelocityBodyYawspeed cmd{};
+            cmd.forward_m_s = static_cast<float>(velocity);
+            cmd.down_m_s = 0.0;
+            cmd.right_m_s = 0.0;
+            cmd.yawspeed_deg_s = 0.0;
+
+            offboard.set_velocity_body(cmd);
+
+            for (int i = 0; i < 20; ++i) {
+                offboard.set_velocity_body(cmd);
+                std::this_thread::sleep_for(50ms);
+            }
+            auto r = offboard.start();
+            std::cout << "Flight mode: " << static_cast<int>(_telemetry.flight_mode()) << "\n";
+            if (r != mavsdk::Offboard::Result::Success) {
+                reply -> set_accepted(false);
+                reply -> set_message("Offboard failed");
+                return grpc::Status::OK;
+            }
+            const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
+            while (std::chrono::steady_clock::now() < end) {
+                offboard.set_velocity_body(cmd);
+                std::this_thread::sleep_for(100ms);
+            }
+
+            cmd.forward_m_s = 0.0;
+            offboard.set_velocity_body(cmd);
+
+            offboard.stop();
+            reply -> set_accepted(true);
+            reply -> set_message("Flyforward executed");
+            return grpc::Status::OK;
+        }
         reply->set_accepted(false);
         reply->set_message("Unsupported command payload");
         return grpc::Status::OK;
     }
 
+
     grpc::Status StopNow(grpc::ServerContext*,
                          const drone::StopRequest*,
                          drone::StopReply* reply) override
     {
-        // “Stop now” for this simple demo: command HOLD (loiter)
         auto r = _action.hold();
         reply->set_ok(r == mavsdk::Action::Result::Success);
         reply->set_message(std::string("Hold result: ") + action_result_to_string(r));
@@ -123,9 +164,83 @@ public:
         return grpc::Status::OK;
     }
 
-private:
-    mavsdk::Action& _action;
+    bool ensure_airborn_or_reply(drone::CommandAck* reply) {
+
+        const auto start = std::chrono::steady_clock::now();
+        while (!_telemetry.health_all_ok()) {
+            if (std::chrono::steady_clock::now() - start < 10s) {
+                reply -> set_accepted(false);
+                reply -> set_message("Preflight NOT OK, health_status == false after 10 seconds");
+                return false;
+            }
+            std::this_thread::sleep_for(200ms);
+        }
+        if (_telemetry.armed() != true) {
+            auto r = _action.arm();
+            if (mavsdk::Action::Result::Success != r) {
+                reply -> set_accepted(false);
+                reply -> set_message("Arm failed");
+                return false;
+            }
+        }
+
+        const auto arm_start = std::chrono::steady_clock::now();
+        while (!_telemetry.health_all_ok()) {
+            if (std::chrono::steady_clock::now() - start < 5s) {
+                reply -> set_accepted(false);
+                reply -> set_message("Arming failed, health_status = false after 5 seconds");
+                return false;
+            }
+            std::this_thread::sleep_for(200ms);
+        }
+
+        if (_telemetry.in_air() != true) {
+            auto r = _action.takeoff();
+            if (r != mavsdk::Action::Result::Success) {
+                reply -> set_accepted(false);
+                reply -> set_message("Takeoff failed");
+                return false;
+            }
+        }
+        const auto to_start = std::chrono::steady_clock::now();
+        while (!_telemetry.health_all_ok()) {
+            if (std::chrono::steady_clock::now() - start < 5s) {
+                reply -> set_accepted(false);
+                reply -> set_message("Takeoff failed, health_status = false after 5 seconds");
+                return false;
+            }
+            std::this_thread::sleep_for(200ms);
+        }
+        return true;
+    }
+    bool wait_until_ready_for_offboard(drone::CommandAck* reply)
+    {
+        // Wait until we're in air
+        const auto t0 = std::chrono::steady_clock::now();
+        while (!_telemetry.in_air()) {
+            if (std::chrono::steady_clock::now() - t0 > 10s) {
+                reply->set_accepted(false);
+                reply->set_message("Not in air after 10s");
+                return false;
+            }
+            std::this_thread::sleep_for(200ms);
+        }
+
+        // Wait until TAKEOFF mode is finished (PX4 often stays in Takeoff mode briefly)
+        const auto t1 = std::chrono::steady_clock::now();
+        while (_telemetry.flight_mode() == mavsdk::Telemetry::FlightMode::Takeoff) {
+            if (std::chrono::steady_clock::now() - t1 > 10s) {
+                reply->set_accepted(false);
+                reply->set_message("Still in Takeoff flight mode after 10s");
+                return false;
+            }
+            std::this_thread::sleep_for(200ms);
+        }
+
+        return true;
+    }
 };
+
 
 int main()
 {
@@ -152,11 +267,11 @@ int main()
     std::cout << "Autopilot found.\n";
 
     mavsdk::Action action{system};
+    mavsdk::Telemetry telemetry{system};
     action.set_takeoff_altitude(2.0f);
 
-    // 2) Start gRPC server
     std::string addr = "0.0.0.0:60051";
-    DroneControlService service(action);
+    DroneControlService service(action, telemetry, *system);
 
     grpc::ServerBuilder builder;
     builder.AddListeningPort(addr, grpc::InsecureServerCredentials());

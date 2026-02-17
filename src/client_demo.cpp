@@ -9,14 +9,20 @@ int main() {
 
     drone::Command cmd;
     cmd.set_id("test-1");
-    cmd.mutable_hover()->set_seconds(1.0);
+    cmd.mutable_hover()->set_seconds(10.0);
+    auto* fly = cmd.mutable_flyforward();
+    fly ->set_seconds(10);
+    fly -> set_velocity(-10);
 
     drone::CommandAck ack;
     grpc::ClientContext ctx;
     auto status = stub->Enqueue(&ctx, cmd, &ack);
 
-    std::cout << "Enqueue status=" << status.ok()
-              << " accepted=" << ack.accepted()
-              << " msg=" << ack.message() << "\n";
+    std::cout << "rpc_ok=" << status.ok()
+          << " code=" << status.error_code()
+          << " msg=" << status.error_message()
+          << " accepted=" << ack.accepted()
+          << " reply_msg=" << ack.message()
+          << "\n";
     return 0;
 }

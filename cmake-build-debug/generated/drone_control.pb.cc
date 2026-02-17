@@ -72,6 +72,58 @@ struct StopReplyDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopReplyDefaultTypeInternal _StopReply_default_instance_;
 
+inline constexpr Rotate::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        degrees_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Rotate::Rotate(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Rotate_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RotateDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RotateDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RotateDefaultTypeInternal() {}
+  union {
+    Rotate _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RotateDefaultTypeInternal _Rotate_default_instance_;
+
+inline constexpr Land::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()) {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Land::Land(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Land_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct LandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR LandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~LandDefaultTypeInternal() {}
+  union {
+    Land _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LandDefaultTypeInternal _Land_default_instance_;
+
 inline constexpr Hover::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -96,6 +148,32 @@ struct HoverDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HoverDefaultTypeInternal _Hover_default_instance_;
+
+inline constexpr FlyForward::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        seconds_{0},
+        velocity_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR FlyForward::FlyForward(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(FlyForward_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct FlyForwardDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR FlyForwardDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~FlyForwardDefaultTypeInternal() {}
+  union {
+    FlyForward _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 FlyForwardDefaultTypeInternal _FlyForward_default_instance_;
 
 inline constexpr CommandAck::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -167,16 +245,39 @@ const ::uint32_t
         0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_._oneof_case_[0]),
-        7, // hasbit index offset
+        10, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::drone::Command, _impl_.payload_),
         0,
+        ~0u,
+        ~0u,
+        ~0u,
         ~0u,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::Hover, _impl_._has_bits_),
         4, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::drone::Hover, _impl_.seconds_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::FlyForward, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::FlyForward, _impl_.seconds_),
+        PROTOBUF_FIELD_OFFSET(::drone::FlyForward, _impl_.velocity_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::Rotate, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::Rotate, _impl_.degrees_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::Land, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::Land, _impl_.message_),
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_._has_bits_),
@@ -200,41 +301,53 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, sizeof(::drone::Command)},
-        {9, sizeof(::drone::Hover)},
-        {14, sizeof(::drone::CommandAck)},
-        {23, sizeof(::drone::StopRequest)},
-        {24, sizeof(::drone::StopReply)},
+        {15, sizeof(::drone::Hover)},
+        {20, sizeof(::drone::FlyForward)},
+        {27, sizeof(::drone::Rotate)},
+        {32, sizeof(::drone::Land)},
+        {37, sizeof(::drone::CommandAck)},
+        {46, sizeof(::drone::StopRequest)},
+        {47, sizeof(::drone::StopReply)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::drone::_Command_default_instance_._instance,
     &::drone::_Hover_default_instance_._instance,
+    &::drone::_FlyForward_default_instance_._instance,
+    &::drone::_Rotate_default_instance_._instance,
+    &::drone::_Land_default_instance_._instance,
     &::drone::_CommandAck_default_instance_._instance,
     &::drone::_StopRequest_default_instance_._instance,
     &::drone::_StopReply_default_instance_._instance,
 };
 const char descriptor_table_protodef_drone_5fcontrol_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\023drone_control.proto\022\005drone\"\?\n\007Command\022"
-    "\n\n\002id\030\001 \001(\t\022\035\n\005hover\030\n \001(\0132\014.drone.Hover"
-    "H\000B\t\n\007payload\"\030\n\005Hover\022\017\n\007seconds\030\001 \001(\001\""
-    ";\n\nCommandAck\022\n\n\002id\030\001 \001(\t\022\020\n\010accepted\030\002 "
-    "\001(\010\022\017\n\007message\030\003 \001(\t\"\r\n\013StopRequest\"(\n\tS"
-    "topReply\022\n\n\002ok\030\001 \001(\010\022\017\n\007message\030\002 \001(\t2m\n"
-    "\014DroneControl\022,\n\007Enqueue\022\016.drone.Command"
-    "\032\021.drone.CommandAck\022/\n\007StopNow\022\022.drone.S"
-    "topRequest\032\020.drone.StopReplyb\006proto3"
+    "\n\023drone_control.proto\022\005drone\"\246\001\n\007Command"
+    "\022\n\n\002id\030\001 \001(\t\022\035\n\005hover\030\n \001(\0132\014.drone.Hove"
+    "rH\000\022\'\n\nflyForward\030\013 \001(\0132\021.drone.FlyForwa"
+    "rdH\000\022\037\n\006rotate\030\014 \001(\0132\r.drone.RotateH\000\022\033\n"
+    "\004land\030\r \001(\0132\013.drone.LandH\000B\t\n\007payload\"\030\n"
+    "\005Hover\022\017\n\007seconds\030\001 \001(\001\"/\n\nFlyForward\022\017\n"
+    "\007seconds\030\001 \001(\001\022\020\n\010velocity\030\002 \001(\001\"\031\n\006Rota"
+    "te\022\017\n\007degrees\030\001 \001(\001\"\027\n\004Land\022\017\n\007message\030\001"
+    " \001(\t\";\n\nCommandAck\022\n\n\002id\030\001 \001(\t\022\020\n\010accept"
+    "ed\030\002 \001(\010\022\017\n\007message\030\003 \001(\t\"\r\n\013StopRequest"
+    "\"(\n\tStopReply\022\n\n\002ok\030\001 \001(\010\022\017\n\007message\030\002 \001"
+    "(\t2m\n\014DroneControl\022,\n\007Enqueue\022\016.drone.Co"
+    "mmand\032\021.drone.CommandAck\022/\n\007StopNow\022\022.dr"
+    "one.StopRequest\032\020.drone.StopReplyb\006proto"
+    "3"
 };
 static ::absl::once_flag descriptor_table_drone_5fcontrol_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_drone_5fcontrol_2eproto = {
     false,
     false,
-    356,
+    561,
     descriptor_table_protodef_drone_5fcontrol_2eproto,
     "drone_control.proto",
     &descriptor_table_drone_5fcontrol_2eproto_once,
     nullptr,
     0,
-    5,
+    8,
     schemas,
     file_default_instances,
     TableStruct_drone_5fcontrol_2eproto::offsets,
@@ -266,6 +379,45 @@ void Command::set_allocated_hover(::drone::Hover* PROTOBUF_NULLABLE hover) {
     _impl_.payload_.hover_ = hover;
   }
   // @@protoc_insertion_point(field_set_allocated:drone.Command.hover)
+}
+void Command::set_allocated_flyforward(::drone::FlyForward* PROTOBUF_NULLABLE flyforward) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (flyforward) {
+    ::google::protobuf::Arena* submessage_arena = flyforward->GetArena();
+    if (message_arena != submessage_arena) {
+      flyforward = ::google::protobuf::internal::GetOwnedMessage(message_arena, flyforward, submessage_arena);
+    }
+    set_has_flyforward();
+    _impl_.payload_.flyforward_ = flyforward;
+  }
+  // @@protoc_insertion_point(field_set_allocated:drone.Command.flyForward)
+}
+void Command::set_allocated_rotate(::drone::Rotate* PROTOBUF_NULLABLE rotate) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (rotate) {
+    ::google::protobuf::Arena* submessage_arena = rotate->GetArena();
+    if (message_arena != submessage_arena) {
+      rotate = ::google::protobuf::internal::GetOwnedMessage(message_arena, rotate, submessage_arena);
+    }
+    set_has_rotate();
+    _impl_.payload_.rotate_ = rotate;
+  }
+  // @@protoc_insertion_point(field_set_allocated:drone.Command.rotate)
+}
+void Command::set_allocated_land(::drone::Land* PROTOBUF_NULLABLE land) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (land) {
+    ::google::protobuf::Arena* submessage_arena = land->GetArena();
+    if (message_arena != submessage_arena) {
+      land = ::google::protobuf::internal::GetOwnedMessage(message_arena, land, submessage_arena);
+    }
+    set_has_land();
+    _impl_.payload_.land_ = land;
+  }
+  // @@protoc_insertion_point(field_set_allocated:drone.Command.land)
 }
 Command::Command(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -304,6 +456,15 @@ Command::Command(
       break;
       case kHover:
         _impl_.payload_.hover_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.hover_);
+        break;
+      case kFlyForward:
+        _impl_.payload_.flyforward_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.flyforward_);
+        break;
+      case kRotate:
+        _impl_.payload_.rotate_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rotate_);
+        break;
+      case kLand:
+        _impl_.payload_.land_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.land_);
         break;
   }
 
@@ -347,6 +508,30 @@ void Command::clear_payload() {
         delete _impl_.payload_.hover_;
       } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
         ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.hover_);
+      }
+      break;
+    }
+    case kFlyForward: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.flyforward_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.flyforward_);
+      }
+      break;
+    }
+    case kRotate: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.rotate_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.rotate_);
+      }
+      break;
+    }
+    case kLand: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.land_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.land_);
       }
       break;
     }
@@ -401,17 +586,17 @@ Command::GetClassData() const {
   return Command_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 2, 1, 24, 2>
+const ::_pbi::TcParseTable<0, 5, 4, 24, 2>
 Command::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Command, _impl_._has_bits_),
     0, // no _extensions_
-    10, 0,  // max_field_number, fast_idx_mask
+    13, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294966782,  // skipmap
+    4294959614,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    1,  // num_aux_entries
+    5,  // num_field_entries
+    4,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Command_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -431,9 +616,18 @@ Command::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .drone.Hover hover = 10;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.hover_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .drone.FlyForward flyForward = 11;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.flyforward_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .drone.Rotate rotate = 12;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.rotate_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .drone.Land land = 13;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.land_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::drone::Hover>()},
+      {::_pbi::TcParser::GetTable<::drone::FlyForward>()},
+      {::_pbi::TcParser::GetTable<::drone::Rotate>()},
+      {::_pbi::TcParser::GetTable<::drone::Land>()},
   }},
   {{
     "\15\2\0\0\0\0\0\0"
@@ -486,13 +680,34 @@ PROTOBUF_NOINLINE void Command::Clear() {
     }
   }
 
-  // .drone.Hover hover = 10;
-  if (this_.payload_case() == kHover) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        10, *this_._impl_.payload_.hover_, this_._impl_.payload_.hover_->GetCachedSize(), target,
-        stream);
+  switch (this_.payload_case()) {
+    case kHover: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          10, *this_._impl_.payload_.hover_, this_._impl_.payload_.hover_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kFlyForward: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          11, *this_._impl_.payload_.flyforward_, this_._impl_.payload_.flyforward_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kRotate: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          12, *this_._impl_.payload_.rotate_, this_._impl_.payload_.rotate_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kLand: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          13, *this_._impl_.payload_.land_, this_._impl_.payload_.land_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
   }
-
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -531,6 +746,24 @@ PROTOBUF_NOINLINE void Command::Clear() {
     case kHover: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.hover_);
+      break;
+    }
+    // .drone.FlyForward flyForward = 11;
+    case kFlyForward: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.flyforward_);
+      break;
+    }
+    // .drone.Rotate rotate = 12;
+    case kRotate: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rotate_);
+      break;
+    }
+    // .drone.Land land = 13;
+    case kLand: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.land_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -583,6 +816,30 @@ void Command::MergeImpl(::google::protobuf::MessageLite& to_msg,
           _this->_impl_.payload_.hover_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.hover_);
         } else {
           _this->_impl_.payload_.hover_->MergeFrom(*from._impl_.payload_.hover_);
+        }
+        break;
+      }
+      case kFlyForward: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.flyforward_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.flyforward_);
+        } else {
+          _this->_impl_.payload_.flyforward_->MergeFrom(*from._impl_.payload_.flyforward_);
+        }
+        break;
+      }
+      case kRotate: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.rotate_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rotate_);
+        } else {
+          _this->_impl_.payload_.rotate_->MergeFrom(*from._impl_.payload_.rotate_);
+        }
+        break;
+      }
+      case kLand: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.land_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.land_);
+        } else {
+          _this->_impl_.payload_.land_->MergeFrom(*from._impl_.payload_.land_);
         }
         break;
       }
@@ -861,6 +1118,819 @@ void Hover::InternalSwap(Hover* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
 }
 
 ::google::protobuf::Metadata Hover::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class FlyForward::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<FlyForward>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(FlyForward, _impl_._has_bits_);
+};
+
+FlyForward::FlyForward(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, FlyForward_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.FlyForward)
+}
+FlyForward::FlyForward(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const FlyForward& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, FlyForward_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+PROTOBUF_NDEBUG_INLINE FlyForward::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void FlyForward::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, seconds_),
+           0,
+           offsetof(Impl_, velocity_) -
+               offsetof(Impl_, seconds_) +
+               sizeof(Impl_::velocity_));
+}
+FlyForward::~FlyForward() {
+  // @@protoc_insertion_point(destructor:drone.FlyForward)
+  SharedDtor(*this);
+}
+inline void FlyForward::SharedDtor(MessageLite& self) {
+  FlyForward& this_ = static_cast<FlyForward&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL FlyForward::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) FlyForward(arena);
+}
+constexpr auto FlyForward::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(FlyForward),
+                                            alignof(FlyForward));
+}
+constexpr auto FlyForward::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_FlyForward_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &FlyForward::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<FlyForward>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &FlyForward::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<FlyForward>(), &FlyForward::ByteSizeLong,
+              &FlyForward::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(FlyForward, _impl_._cached_size_),
+          false,
+      },
+      &FlyForward::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull FlyForward_class_data_ =
+        FlyForward::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+FlyForward::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&FlyForward_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(FlyForward_class_data_.tc_table);
+  return FlyForward_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2>
+FlyForward::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(FlyForward, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    FlyForward_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::FlyForward>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // double velocity = 2;
+    {::_pbi::TcParser::FastF64S1,
+     {17, 1, 0,
+      PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.velocity_)}},
+    // double seconds = 1;
+    {::_pbi::TcParser::FastF64S1,
+     {9, 0, 0,
+      PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.seconds_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // double seconds = 1;
+    {PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.seconds_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double velocity = 2;
+    {PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.velocity_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void FlyForward::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.FlyForward)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    ::memset(&_impl_.seconds_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.velocity_) -
+        reinterpret_cast<char*>(&_impl_.seconds_)) + sizeof(_impl_.velocity_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL FlyForward::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const FlyForward& this_ = static_cast<const FlyForward&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL FlyForward::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const FlyForward& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.FlyForward)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // double seconds = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_seconds()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          1, this_._internal_seconds(), target);
+    }
+  }
+
+  // double velocity = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_velocity()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          2, this_._internal_velocity(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.FlyForward)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t FlyForward::ByteSizeLong(const MessageLite& base) {
+  const FlyForward& this_ = static_cast<const FlyForward&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t FlyForward::ByteSizeLong() const {
+  const FlyForward& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.FlyForward)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // double seconds = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_seconds()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double velocity = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_velocity()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void FlyForward::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<FlyForward*>(&to_msg);
+  auto& from = static_cast<const FlyForward&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.FlyForward)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_seconds()) != 0) {
+        _this->_impl_.seconds_ = from._impl_.seconds_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_velocity()) != 0) {
+        _this->_impl_.velocity_ = from._impl_.velocity_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void FlyForward::CopyFrom(const FlyForward& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.FlyForward)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void FlyForward::InternalSwap(FlyForward* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.velocity_)
+      + sizeof(FlyForward::_impl_.velocity_)
+      - PROTOBUF_FIELD_OFFSET(FlyForward, _impl_.seconds_)>(
+          reinterpret_cast<char*>(&_impl_.seconds_),
+          reinterpret_cast<char*>(&other->_impl_.seconds_));
+}
+
+::google::protobuf::Metadata FlyForward::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class Rotate::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Rotate>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Rotate, _impl_._has_bits_);
+};
+
+Rotate::Rotate(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Rotate_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.Rotate)
+}
+Rotate::Rotate(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Rotate& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Rotate_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+PROTOBUF_NDEBUG_INLINE Rotate::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void Rotate::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.degrees_ = {};
+}
+Rotate::~Rotate() {
+  // @@protoc_insertion_point(destructor:drone.Rotate)
+  SharedDtor(*this);
+}
+inline void Rotate::SharedDtor(MessageLite& self) {
+  Rotate& this_ = static_cast<Rotate&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL Rotate::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Rotate(arena);
+}
+constexpr auto Rotate::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(Rotate),
+                                            alignof(Rotate));
+}
+constexpr auto Rotate::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Rotate_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Rotate::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Rotate>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Rotate::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Rotate>(), &Rotate::ByteSizeLong,
+              &Rotate::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Rotate, _impl_._cached_size_),
+          false,
+      },
+      &Rotate::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Rotate_class_data_ =
+        Rotate::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Rotate::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Rotate_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Rotate_class_data_.tc_table);
+  return Rotate_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2>
+Rotate::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Rotate, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    Rotate_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::Rotate>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // double degrees = 1;
+    {::_pbi::TcParser::FastF64S1,
+     {9, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Rotate, _impl_.degrees_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // double degrees = 1;
+    {PROTOBUF_FIELD_OFFSET(Rotate, _impl_.degrees_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void Rotate::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.Rotate)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.degrees_ = 0;
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Rotate::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Rotate& this_ = static_cast<const Rotate&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Rotate::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Rotate& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.Rotate)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // double degrees = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_degrees()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          1, this_._internal_degrees(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.Rotate)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Rotate::ByteSizeLong(const MessageLite& base) {
+  const Rotate& this_ = static_cast<const Rotate&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Rotate::ByteSizeLong() const {
+  const Rotate& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.Rotate)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // double degrees = 1;
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_degrees()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Rotate::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Rotate*>(&to_msg);
+  auto& from = static_cast<const Rotate&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.Rotate)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (::absl::bit_cast<::uint64_t>(from._internal_degrees()) != 0) {
+      _this->_impl_.degrees_ = from._impl_.degrees_;
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Rotate::CopyFrom(const Rotate& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.Rotate)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Rotate::InternalSwap(Rotate* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.degrees_, other->_impl_.degrees_);
+}
+
+::google::protobuf::Metadata Rotate::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class Land::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Land>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Land, _impl_._has_bits_);
+};
+
+Land::Land(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Land_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.Land)
+}
+PROTOBUF_NDEBUG_INLINE Land::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::drone::Land& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        message_(arena, from.message_) {}
+
+Land::Land(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const Land& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Land_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  Land* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:drone.Land)
+}
+PROTOBUF_NDEBUG_INLINE Land::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        message_(arena) {}
+
+inline void Land::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+Land::~Land() {
+  // @@protoc_insertion_point(destructor:drone.Land)
+  SharedDtor(*this);
+}
+inline void Land::SharedDtor(MessageLite& self) {
+  Land& this_ = static_cast<Land&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.message_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL Land::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Land(arena);
+}
+constexpr auto Land::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(Land),
+                                            alignof(Land));
+}
+constexpr auto Land::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Land_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Land::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Land>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Land::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Land>(), &Land::ByteSizeLong,
+              &Land::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Land, _impl_._cached_size_),
+          false,
+      },
+      &Land::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Land_class_data_ =
+        Land::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Land::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Land_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Land_class_data_.tc_table);
+  return Land_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 26, 2>
+Land::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Land, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    Land_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::Land>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string message = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Land, _impl_.message_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string message = 1;
+    {PROTOBUF_FIELD_OFFSET(Land, _impl_.message_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\12\7\0\0\0\0\0\0"
+    "drone.Land"
+    "message"
+  }},
+};
+PROTOBUF_NOINLINE void Land::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.Land)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    _impl_.message_.ClearNonDefaultToEmpty();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Land::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Land& this_ = static_cast<const Land&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Land::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Land& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.Land)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string message = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_message().empty()) {
+      const ::std::string& _s = this_._internal_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "drone.Land.message");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.Land)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Land::ByteSizeLong(const MessageLite& base) {
+  const Land& this_ = static_cast<const Land&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Land::ByteSizeLong() const {
+  const Land& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.Land)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // string message = 1;
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_message().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_message());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Land::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Land*>(&to_msg);
+  auto& from = static_cast<const Land&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.Land)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!from._internal_message().empty()) {
+      _this->_internal_set_message(from._internal_message());
+    } else {
+      if (_this->_impl_.message_.IsDefault()) {
+        _this->_internal_set_message("");
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Land::CopyFrom(const Land& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.Land)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Land::InternalSwap(Land* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.message_, &other->_impl_.message_, arena);
+}
+
+::google::protobuf::Metadata Land::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
