@@ -1,0 +1,20 @@
+syntax = "proto3";
+package drone;
+
+service DroneControl {
+  rpc Enqueue(Command) returns (CommandAck);
+  rpc StopNow(StopRequest) returns (StopReply);
+}
+
+message Command {
+  string id = 1;
+  oneof payload {
+    Hover hover = 10;
+  }
+}
+
+message Hover { double seconds = 1; }
+
+message CommandAck { string id = 1; bool accepted = 2; string message = 3; }
+message StopRequest {}
+message StopReply { bool ok = 1; string message = 2; }
