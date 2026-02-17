@@ -25,6 +25,32 @@ namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
 namespace drone {
+
+inline constexpr TurnYaw::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        deg_{0},
+        seconds_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR TurnYaw::TurnYaw(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(TurnYaw_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct TurnYawDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TurnYawDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TurnYawDefaultTypeInternal() {}
+  union {
+    TurnYaw _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TurnYawDefaultTypeInternal _TurnYaw_default_instance_;
 template <typename>
 PROTOBUF_CONSTEXPR StopRequest::StopRequest(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -71,31 +97,6 @@ struct StopReplyDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopReplyDefaultTypeInternal _StopReply_default_instance_;
-
-inline constexpr Rotate::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        degrees_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR Rotate::Rotate(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(Rotate_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct RotateDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR RotateDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~RotateDefaultTypeInternal() {}
-  union {
-    Rotate _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RotateDefaultTypeInternal _Rotate_default_instance_;
 
 inline constexpr Land::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -270,15 +271,17 @@ const ::uint32_t
         0,
         1,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::drone::Rotate, _impl_._has_bits_),
-        4, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::drone::Rotate, _impl_.degrees_),
-        0,
-        0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::Land, _impl_._has_bits_),
         4, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::drone::Land, _impl_.message_),
         0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::TurnYaw, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::TurnYaw, _impl_.deg_),
+        PROTOBUF_FIELD_OFFSET(::drone::TurnYaw, _impl_.seconds_),
+        0,
+        1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_._has_bits_),
         6, // hasbit index offset
@@ -303,45 +306,45 @@ static const ::_pbi::MigrationSchema
         {0, sizeof(::drone::Command)},
         {15, sizeof(::drone::Hover)},
         {20, sizeof(::drone::FlyForward)},
-        {27, sizeof(::drone::Rotate)},
-        {32, sizeof(::drone::Land)},
-        {37, sizeof(::drone::CommandAck)},
-        {46, sizeof(::drone::StopRequest)},
-        {47, sizeof(::drone::StopReply)},
+        {27, sizeof(::drone::Land)},
+        {32, sizeof(::drone::TurnYaw)},
+        {39, sizeof(::drone::CommandAck)},
+        {48, sizeof(::drone::StopRequest)},
+        {49, sizeof(::drone::StopReply)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::drone::_Command_default_instance_._instance,
     &::drone::_Hover_default_instance_._instance,
     &::drone::_FlyForward_default_instance_._instance,
-    &::drone::_Rotate_default_instance_._instance,
     &::drone::_Land_default_instance_._instance,
+    &::drone::_TurnYaw_default_instance_._instance,
     &::drone::_CommandAck_default_instance_._instance,
     &::drone::_StopRequest_default_instance_._instance,
     &::drone::_StopReply_default_instance_._instance,
 };
 const char descriptor_table_protodef_drone_5fcontrol_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\023drone_control.proto\022\005drone\"\246\001\n\007Command"
+    "\n\023drone_control.proto\022\005drone\"\250\001\n\007Command"
     "\022\n\n\002id\030\001 \001(\t\022\035\n\005hover\030\n \001(\0132\014.drone.Hove"
     "rH\000\022\'\n\nflyForward\030\013 \001(\0132\021.drone.FlyForwa"
-    "rdH\000\022\037\n\006rotate\030\014 \001(\0132\r.drone.RotateH\000\022\033\n"
-    "\004land\030\r \001(\0132\013.drone.LandH\000B\t\n\007payload\"\030\n"
-    "\005Hover\022\017\n\007seconds\030\001 \001(\001\"/\n\nFlyForward\022\017\n"
-    "\007seconds\030\001 \001(\001\022\020\n\010velocity\030\002 \001(\001\"\031\n\006Rota"
-    "te\022\017\n\007degrees\030\001 \001(\001\"\027\n\004Land\022\017\n\007message\030\001"
-    " \001(\t\";\n\nCommandAck\022\n\n\002id\030\001 \001(\t\022\020\n\010accept"
-    "ed\030\002 \001(\010\022\017\n\007message\030\003 \001(\t\"\r\n\013StopRequest"
-    "\"(\n\tStopReply\022\n\n\002ok\030\001 \001(\010\022\017\n\007message\030\002 \001"
-    "(\t2m\n\014DroneControl\022,\n\007Enqueue\022\016.drone.Co"
-    "mmand\032\021.drone.CommandAck\022/\n\007StopNow\022\022.dr"
-    "one.StopRequest\032\020.drone.StopReplyb\006proto"
-    "3"
+    "rdH\000\022!\n\007turnYaw\030\014 \001(\0132\016.drone.TurnYawH\000\022"
+    "\033\n\004land\030\r \001(\0132\013.drone.LandH\000B\t\n\007payload\""
+    "\030\n\005Hover\022\017\n\007seconds\030\001 \001(\001\"/\n\nFlyForward\022"
+    "\017\n\007seconds\030\001 \001(\001\022\020\n\010velocity\030\002 \001(\001\"\027\n\004La"
+    "nd\022\017\n\007message\030\001 \001(\t\"\'\n\007TurnYaw\022\013\n\003deg\030\001 "
+    "\001(\001\022\017\n\007seconds\030\002 \001(\001\";\n\nCommandAck\022\n\n\002id"
+    "\030\001 \001(\t\022\020\n\010accepted\030\002 \001(\010\022\017\n\007message\030\003 \001("
+    "\t\"\r\n\013StopRequest\"(\n\tStopReply\022\n\n\002ok\030\001 \001("
+    "\010\022\017\n\007message\030\002 \001(\t2m\n\014DroneControl\022,\n\007En"
+    "queue\022\016.drone.Command\032\021.drone.CommandAck"
+    "\022/\n\007StopNow\022\022.drone.StopRequest\032\020.drone."
+    "StopReplyb\006proto3"
 };
 static ::absl::once_flag descriptor_table_drone_5fcontrol_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_drone_5fcontrol_2eproto = {
     false,
     false,
-    561,
+    577,
     descriptor_table_protodef_drone_5fcontrol_2eproto,
     "drone_control.proto",
     &descriptor_table_drone_5fcontrol_2eproto_once,
@@ -393,18 +396,18 @@ void Command::set_allocated_flyforward(::drone::FlyForward* PROTOBUF_NULLABLE fl
   }
   // @@protoc_insertion_point(field_set_allocated:drone.Command.flyForward)
 }
-void Command::set_allocated_rotate(::drone::Rotate* PROTOBUF_NULLABLE rotate) {
+void Command::set_allocated_turnyaw(::drone::TurnYaw* PROTOBUF_NULLABLE turnyaw) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
-  if (rotate) {
-    ::google::protobuf::Arena* submessage_arena = rotate->GetArena();
+  if (turnyaw) {
+    ::google::protobuf::Arena* submessage_arena = turnyaw->GetArena();
     if (message_arena != submessage_arena) {
-      rotate = ::google::protobuf::internal::GetOwnedMessage(message_arena, rotate, submessage_arena);
+      turnyaw = ::google::protobuf::internal::GetOwnedMessage(message_arena, turnyaw, submessage_arena);
     }
-    set_has_rotate();
-    _impl_.payload_.rotate_ = rotate;
+    set_has_turnyaw();
+    _impl_.payload_.turnyaw_ = turnyaw;
   }
-  // @@protoc_insertion_point(field_set_allocated:drone.Command.rotate)
+  // @@protoc_insertion_point(field_set_allocated:drone.Command.turnYaw)
 }
 void Command::set_allocated_land(::drone::Land* PROTOBUF_NULLABLE land) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -460,8 +463,8 @@ Command::Command(
       case kFlyForward:
         _impl_.payload_.flyforward_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.flyforward_);
         break;
-      case kRotate:
-        _impl_.payload_.rotate_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rotate_);
+      case kTurnYaw:
+        _impl_.payload_.turnyaw_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.turnyaw_);
         break;
       case kLand:
         _impl_.payload_.land_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.land_);
@@ -519,11 +522,11 @@ void Command::clear_payload() {
       }
       break;
     }
-    case kRotate: {
+    case kTurnYaw: {
       if (GetArena() == nullptr) {
-        delete _impl_.payload_.rotate_;
+        delete _impl_.payload_.turnyaw_;
       } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.rotate_);
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.turnyaw_);
       }
       break;
     }
@@ -618,15 +621,15 @@ Command::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.hover_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .drone.FlyForward flyForward = 11;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.flyforward_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .drone.Rotate rotate = 12;
-    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.rotate_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .drone.TurnYaw turnYaw = 12;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.turnyaw_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .drone.Land land = 13;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.land_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::drone::Hover>()},
       {::_pbi::TcParser::GetTable<::drone::FlyForward>()},
-      {::_pbi::TcParser::GetTable<::drone::Rotate>()},
+      {::_pbi::TcParser::GetTable<::drone::TurnYaw>()},
       {::_pbi::TcParser::GetTable<::drone::Land>()},
   }},
   {{
@@ -693,9 +696,9 @@ PROTOBUF_NOINLINE void Command::Clear() {
           stream);
       break;
     }
-    case kRotate: {
+    case kTurnYaw: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          12, *this_._impl_.payload_.rotate_, this_._impl_.payload_.rotate_->GetCachedSize(), target,
+          12, *this_._impl_.payload_.turnyaw_, this_._impl_.payload_.turnyaw_->GetCachedSize(), target,
           stream);
       break;
     }
@@ -754,10 +757,10 @@ PROTOBUF_NOINLINE void Command::Clear() {
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.flyforward_);
       break;
     }
-    // .drone.Rotate rotate = 12;
-    case kRotate: {
+    // .drone.TurnYaw turnYaw = 12;
+    case kTurnYaw: {
       total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rotate_);
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.turnyaw_);
       break;
     }
     // .drone.Land land = 13;
@@ -827,11 +830,11 @@ void Command::MergeImpl(::google::protobuf::MessageLite& to_msg,
         }
         break;
       }
-      case kRotate: {
+      case kTurnYaw: {
         if (oneof_needs_init) {
-          _this->_impl_.payload_.rotate_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rotate_);
+          _this->_impl_.payload_.turnyaw_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.turnyaw_);
         } else {
-          _this->_impl_.payload_.rotate_->MergeFrom(*from._impl_.payload_.rotate_);
+          _this->_impl_.payload_.turnyaw_->MergeFrom(*from._impl_.payload_.turnyaw_);
         }
         break;
       }
@@ -1413,253 +1416,6 @@ void FlyForward::InternalSwap(FlyForward* PROTOBUF_RESTRICT PROTOBUF_NONNULL oth
 }
 // ===================================================================
 
-class Rotate::_Internal {
- public:
-  using HasBits =
-      decltype(::std::declval<Rotate>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-      8 * PROTOBUF_FIELD_OFFSET(Rotate, _impl_._has_bits_);
-};
-
-Rotate::Rotate(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, Rotate_class_data_.base()) {
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena) {
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:drone.Rotate)
-}
-Rotate::Rotate(
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Rotate& from)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, Rotate_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(from._impl_) {
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-}
-PROTOBUF_NDEBUG_INLINE Rotate::Impl_::Impl_(
-    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
-    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
-      : _cached_size_{0} {}
-
-inline void Rotate::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.degrees_ = {};
-}
-Rotate::~Rotate() {
-  // @@protoc_insertion_point(destructor:drone.Rotate)
-  SharedDtor(*this);
-}
-inline void Rotate::SharedDtor(MessageLite& self) {
-  Rotate& this_ = static_cast<Rotate&>(self);
-  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
-    this_.CheckHasBitConsistency();
-  }
-  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.~Impl_();
-}
-
-inline void* PROTOBUF_NONNULL Rotate::PlacementNew_(
-    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
-  return ::new (mem) Rotate(arena);
-}
-constexpr auto Rotate::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(Rotate),
-                                            alignof(Rotate));
-}
-constexpr auto Rotate::InternalGenerateClassData_() {
-  return ::google::protobuf::internal::ClassDataFull{
-      ::google::protobuf::internal::ClassData{
-          &_Rotate_default_instance_._instance,
-          &_table_.header,
-          nullptr,  // OnDemandRegisterArenaDtor
-          nullptr,  // IsInitialized
-          &Rotate::MergeImpl,
-          ::google::protobuf::Message::GetNewImpl<Rotate>(),
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-          &Rotate::SharedDtor,
-          ::google::protobuf::Message::GetClearImpl<Rotate>(), &Rotate::ByteSizeLong,
-              &Rotate::_InternalSerialize,
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          PROTOBUF_FIELD_OFFSET(Rotate, _impl_._cached_size_),
-          false,
-      },
-      &Rotate::kDescriptorMethods,
-      &descriptor_table_drone_5fcontrol_2eproto,
-      nullptr,  // tracker
-  };
-}
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
-    ::google::protobuf::internal::ClassDataFull Rotate_class_data_ =
-        Rotate::InternalGenerateClassData_();
-
-PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
-Rotate::GetClassData() const {
-  ::google::protobuf::internal::PrefetchToLocalCache(&Rotate_class_data_);
-  ::google::protobuf::internal::PrefetchToLocalCache(Rotate_class_data_.tc_table);
-  return Rotate_class_data_.base();
-}
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2>
-Rotate::_table_ = {
-  {
-    PROTOBUF_FIELD_OFFSET(Rotate, _impl_._has_bits_),
-    0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    Rotate_class_data_.base(),
-    nullptr,  // post_loop_handler
-    ::_pbi::TcParser::GenericFallback,  // fallback
-    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::drone::Rotate>(),  // to_prefetch
-    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-  }, {{
-    // double degrees = 1;
-    {::_pbi::TcParser::FastF64S1,
-     {9, 0, 0,
-      PROTOBUF_FIELD_OFFSET(Rotate, _impl_.degrees_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // double degrees = 1;
-    {PROTOBUF_FIELD_OFFSET(Rotate, _impl_.degrees_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-  }},
-  // no aux_entries
-  {{
-  }},
-};
-PROTOBUF_NOINLINE void Rotate::Clear() {
-// @@protoc_insertion_point(message_clear_start:drone.Rotate)
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.degrees_ = 0;
-  _impl_._has_bits_.Clear();
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-::uint8_t* PROTOBUF_NONNULL Rotate::_InternalSerialize(
-    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
-    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
-  const Rotate& this_ = static_cast<const Rotate&>(base);
-#else   // PROTOBUF_CUSTOM_VTABLE
-::uint8_t* PROTOBUF_NONNULL Rotate::_InternalSerialize(
-    ::uint8_t* PROTOBUF_NONNULL target,
-    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-  const Rotate& this_ = *this;
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
-    this_.CheckHasBitConsistency();
-  }
-  // @@protoc_insertion_point(serialize_to_array_start:drone.Rotate)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  cached_has_bits = this_._impl_._has_bits_[0];
-  // double degrees = 1;
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    if (::absl::bit_cast<::uint64_t>(this_._internal_degrees()) != 0) {
-      target = stream->EnsureSpace(target);
-      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
-          1, this_._internal_degrees(), target);
-    }
-  }
-
-  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:drone.Rotate)
-  return target;
-}
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-::size_t Rotate::ByteSizeLong(const MessageLite& base) {
-  const Rotate& this_ = static_cast<const Rotate&>(base);
-#else   // PROTOBUF_CUSTOM_VTABLE
-::size_t Rotate::ByteSizeLong() const {
-  const Rotate& this_ = *this;
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:drone.Rotate)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void)cached_has_bits;
-
-   {
-    // double degrees = 1;
-    cached_has_bits = this_._impl_._has_bits_[0];
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      if (::absl::bit_cast<::uint64_t>(this_._internal_degrees()) != 0) {
-        total_size += 9;
-      }
-    }
-  }
-  return this_.MaybeComputeUnknownFieldsSize(total_size,
-                                             &this_._impl_._cached_size_);
-}
-
-void Rotate::MergeImpl(::google::protobuf::MessageLite& to_msg,
-                            const ::google::protobuf::MessageLite& from_msg) {
-   auto* const _this =
-      static_cast<Rotate*>(&to_msg);
-  auto& from = static_cast<const Rotate&>(from_msg);
-  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
-    from.CheckHasBitConsistency();
-  }
-  // @@protoc_insertion_point(class_specific_merge_from_start:drone.Rotate)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  cached_has_bits = from._impl_._has_bits_[0];
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    if (::absl::bit_cast<::uint64_t>(from._internal_degrees()) != 0) {
-      _this->_impl_.degrees_ = from._impl_.degrees_;
-    }
-  }
-  _this->_impl_._has_bits_[0] |= cached_has_bits;
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-}
-
-void Rotate::CopyFrom(const Rotate& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:drone.Rotate)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-
-void Rotate::InternalSwap(Rotate* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
-  using ::std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
-  swap(_impl_.degrees_, other->_impl_.degrees_);
-}
-
-::google::protobuf::Metadata Rotate::GetMetadata() const {
-  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
-}
-// ===================================================================
-
 class Land::_Internal {
  public:
   using HasBits =
@@ -1931,6 +1687,297 @@ void Land::InternalSwap(Land* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
 }
 
 ::google::protobuf::Metadata Land::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class TurnYaw::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<TurnYaw>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_._has_bits_);
+};
+
+TurnYaw::TurnYaw(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, TurnYaw_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.TurnYaw)
+}
+TurnYaw::TurnYaw(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const TurnYaw& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, TurnYaw_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+PROTOBUF_NDEBUG_INLINE TurnYaw::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void TurnYaw::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, deg_),
+           0,
+           offsetof(Impl_, seconds_) -
+               offsetof(Impl_, deg_) +
+               sizeof(Impl_::seconds_));
+}
+TurnYaw::~TurnYaw() {
+  // @@protoc_insertion_point(destructor:drone.TurnYaw)
+  SharedDtor(*this);
+}
+inline void TurnYaw::SharedDtor(MessageLite& self) {
+  TurnYaw& this_ = static_cast<TurnYaw&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL TurnYaw::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) TurnYaw(arena);
+}
+constexpr auto TurnYaw::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(TurnYaw),
+                                            alignof(TurnYaw));
+}
+constexpr auto TurnYaw::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_TurnYaw_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &TurnYaw::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<TurnYaw>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &TurnYaw::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<TurnYaw>(), &TurnYaw::ByteSizeLong,
+              &TurnYaw::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_._cached_size_),
+          false,
+      },
+      &TurnYaw::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull TurnYaw_class_data_ =
+        TurnYaw::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+TurnYaw::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&TurnYaw_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(TurnYaw_class_data_.tc_table);
+  return TurnYaw_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2>
+TurnYaw::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    TurnYaw_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::TurnYaw>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // double seconds = 2;
+    {::_pbi::TcParser::FastF64S1,
+     {17, 1, 0,
+      PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.seconds_)}},
+    // double deg = 1;
+    {::_pbi::TcParser::FastF64S1,
+     {9, 0, 0,
+      PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.deg_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // double deg = 1;
+    {PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.deg_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double seconds = 2;
+    {PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.seconds_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void TurnYaw::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.TurnYaw)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    ::memset(&_impl_.deg_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.seconds_) -
+        reinterpret_cast<char*>(&_impl_.deg_)) + sizeof(_impl_.seconds_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL TurnYaw::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const TurnYaw& this_ = static_cast<const TurnYaw&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL TurnYaw::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const TurnYaw& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.TurnYaw)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // double deg = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_deg()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          1, this_._internal_deg(), target);
+    }
+  }
+
+  // double seconds = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_seconds()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          2, this_._internal_seconds(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.TurnYaw)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t TurnYaw::ByteSizeLong(const MessageLite& base) {
+  const TurnYaw& this_ = static_cast<const TurnYaw&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t TurnYaw::ByteSizeLong() const {
+  const TurnYaw& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.TurnYaw)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // double deg = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_deg()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double seconds = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_seconds()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void TurnYaw::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<TurnYaw*>(&to_msg);
+  auto& from = static_cast<const TurnYaw&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.TurnYaw)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_deg()) != 0) {
+        _this->_impl_.deg_ = from._impl_.deg_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_seconds()) != 0) {
+        _this->_impl_.seconds_ = from._impl_.seconds_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void TurnYaw::CopyFrom(const TurnYaw& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.TurnYaw)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void TurnYaw::InternalSwap(TurnYaw* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.seconds_)
+      + sizeof(TurnYaw::_impl_.seconds_)
+      - PROTOBUF_FIELD_OFFSET(TurnYaw, _impl_.deg_)>(
+          reinterpret_cast<char*>(&_impl_.deg_),
+          reinterpret_cast<char*>(&other->_impl_.deg_));
+}
+
+::google::protobuf::Metadata TurnYaw::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================

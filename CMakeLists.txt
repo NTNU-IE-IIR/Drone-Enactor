@@ -29,10 +29,10 @@ find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(MAVSDK REQUIRED)
 
+# ---- Proto generation ----
 set(PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
 set(PROTO_FILE "${PROTO_DIR}/drone_control.proto")
 set(GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
-file(MAKE_DIRECTORY "${GEN_DIR}")
 
 add_custom_command(
         OUTPUT
@@ -40,6 +40,7 @@ add_custom_command(
         "${GEN_DIR}/drone_control.pb.h"
         "${GEN_DIR}/drone_control.grpc.pb.cc"
         "${GEN_DIR}/drone_control.grpc.pb.h"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${GEN_DIR}"
         COMMAND /opt/homebrew/bin/protoc
         ARGS
         -I "${PROTO_DIR}"
@@ -58,10 +59,25 @@ add_library(drone_proto
 target_include_directories(drone_proto PUBLIC "${GEN_DIR}")
 target_link_libraries(drone_proto PUBLIC protobuf::libprotobuf gRPC::grpc++)
 
-add_executable(drone_api_server src/server_main.cpp)
+# ---- Server executable ----
+add_executable(drone_api_server
+        src/server_main.cpp
+        src/drone_control_service.cpp
+        src/flight_helpers.cpp
+)
 target_link_libraries(drone_api_server PRIVATE drone_proto MAVSDK::mavsdk)
 add_dependencies(drone_api_server drone_proto)
 
-add_executable(drone_client_demo src/client_demo.cpp)
+# ---- Client demo executable ----
+add_executable(drone_client_demo
+        src/client_demo.cpp
+)
 target_link_libraries(drone_client_demo PRIVATE drone_proto gRPC::grpc++)
 add_dependencies(drone_client_demo drone_proto)
+
+# ---- Planner CLI executable (separat main) ----
+add_executable(planner_cli
+        src/planner_cli.cpp
+)
+target_link_libraries(planner_cli PRIVATE drone_proto gRPC::grpc++)
+add_dependencies(planner_cli drone_proto)

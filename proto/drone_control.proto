@@ -11,16 +11,16 @@ message Command {
   oneof payload {
     Hover hover = 10;
     FlyForward flyForward = 11;
-    Rotate rotate = 12;
+    TurnYaw turnYaw = 12;
     Land land = 13;
   }
 }
 
 message Hover { double seconds = 1; }
 message FlyForward { double seconds = 1; double velocity = 2;}
-message Rotate {double degrees = 1;}
 message Land {string message = 1;}
+message TurnYaw{ double deg = 1; double seconds = 2;}
 
-message CommandAck { string id = 1; bool accepted = 2; string message = 3; }
+message CommandAck { string id = 1; bool accepted = 2; string message = 3;}
 message StopRequest {}
 message StopReply { bool ok = 1; string message = 2; }

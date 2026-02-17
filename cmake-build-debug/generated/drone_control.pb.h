@@ -74,10 +74,6 @@ class Land;
 struct LandDefaultTypeInternal;
 extern LandDefaultTypeInternal _Land_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull Land_class_data_;
-class Rotate;
-struct RotateDefaultTypeInternal;
-extern RotateDefaultTypeInternal _Rotate_default_instance_;
-extern const ::google::protobuf::internal::ClassDataFull Rotate_class_data_;
 class StopReply;
 struct StopReplyDefaultTypeInternal;
 extern StopReplyDefaultTypeInternal _StopReply_default_instance_;
@@ -86,6 +82,10 @@ class StopRequest;
 struct StopRequestDefaultTypeInternal;
 extern StopRequestDefaultTypeInternal _StopRequest_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull StopRequest_class_data_;
+class TurnYaw;
+struct TurnYawDefaultTypeInternal;
+extern TurnYawDefaultTypeInternal _TurnYaw_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull TurnYaw_class_data_;
 }  // namespace drone
 namespace google {
 namespace protobuf {
@@ -97,6 +97,208 @@ namespace drone {
 // ===================================================================
 
 
+// -------------------------------------------------------------------
+
+class TurnYaw final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:drone.TurnYaw) */ {
+ public:
+  inline TurnYaw() : TurnYaw(nullptr) {}
+  ~TurnYaw() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(TurnYaw* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(TurnYaw));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR TurnYaw(::google::protobuf::internal::ConstantInitialized);
+
+  inline TurnYaw(const TurnYaw& from) : TurnYaw(nullptr, from) {}
+  inline TurnYaw(TurnYaw&& from) noexcept
+      : TurnYaw(nullptr, ::std::move(from)) {}
+  inline TurnYaw& operator=(const TurnYaw& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TurnYaw& operator=(TurnYaw&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const TurnYaw& default_instance() {
+    return *reinterpret_cast<const TurnYaw*>(
+        &_TurnYaw_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 4;
+  friend void swap(TurnYaw& a, TurnYaw& b) { a.Swap(&b); }
+  inline void Swap(TurnYaw* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TurnYaw* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  TurnYaw* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<TurnYaw>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const TurnYaw& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const TurnYaw& from) { TurnYaw::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(TurnYaw* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "drone.TurnYaw"; }
+
+  explicit TurnYaw(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  TurnYaw(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const TurnYaw& from);
+  TurnYaw(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, TurnYaw&& from) noexcept
+      : TurnYaw(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDegFieldNumber = 1,
+    kSecondsFieldNumber = 2,
+  };
+  // double deg = 1;
+  void clear_deg() ;
+  double deg() const;
+  void set_deg(double value);
+
+  private:
+  double _internal_deg() const;
+  void _internal_set_deg(double value);
+
+  public:
+  // double seconds = 2;
+  void clear_seconds() ;
+  double seconds() const;
+  void set_seconds(double value);
+
+  private:
+  double _internal_seconds() const;
+  void _internal_set_seconds(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:drone.TurnYaw)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const TurnYaw& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    double deg_;
+    double seconds_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_drone_5fcontrol_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull TurnYaw_class_data_;
 // -------------------------------------------------------------------
 
 class StopRequest final : public ::google::protobuf::internal::ZeroFieldsBase
@@ -440,196 +642,6 @@ class StopReply final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull StopReply_class_data_;
 // -------------------------------------------------------------------
 
-class Rotate final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:drone.Rotate) */ {
- public:
-  inline Rotate() : Rotate(nullptr) {}
-  ~Rotate() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(Rotate* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(Rotate));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR Rotate(::google::protobuf::internal::ConstantInitialized);
-
-  inline Rotate(const Rotate& from) : Rotate(nullptr, from) {}
-  inline Rotate(Rotate&& from) noexcept
-      : Rotate(nullptr, ::std::move(from)) {}
-  inline Rotate& operator=(const Rotate& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline Rotate& operator=(Rotate&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const Rotate& default_instance() {
-    return *reinterpret_cast<const Rotate*>(
-        &_Rotate_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 3;
-  friend void swap(Rotate& a, Rotate& b) { a.Swap(&b); }
-  inline void Swap(Rotate* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(Rotate* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  Rotate* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<Rotate>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const Rotate& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const Rotate& from) { Rotate::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(Rotate* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "drone.Rotate"; }
-
-  explicit Rotate(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  Rotate(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Rotate& from);
-  Rotate(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, Rotate&& from) noexcept
-      : Rotate(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_();
-
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kDegreesFieldNumber = 1,
-  };
-  // double degrees = 1;
-  void clear_degrees() ;
-  double degrees() const;
-  void set_degrees(double value);
-
-  private:
-  double _internal_degrees() const;
-  void _internal_set_degrees(double value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:drone.Rotate)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   0, 0,
-                                   2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const Rotate& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    double degrees_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_drone_5fcontrol_2eproto;
-};
-
-extern const ::google::protobuf::internal::ClassDataFull Rotate_class_data_;
-// -------------------------------------------------------------------
-
 class Land final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:drone.Land) */ {
  public:
@@ -685,7 +697,7 @@ class Land final : public ::google::protobuf::Message
     return *reinterpret_cast<const Land*>(
         &_Land_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 4;
+  static constexpr int kIndexInFileMessages = 3;
   friend void swap(Land& a, Land& b) { a.Swap(&b); }
   inline void Swap(Land* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1499,7 +1511,7 @@ class Command final : public ::google::protobuf::Message
   enum PayloadCase {
     kHover = 10,
     kFlyForward = 11,
-    kRotate = 12,
+    kTurnYaw = 12,
     kLand = 13,
     PAYLOAD_NOT_SET = 0,
   };
@@ -1593,7 +1605,7 @@ class Command final : public ::google::protobuf::Message
     kIdFieldNumber = 1,
     kHoverFieldNumber = 10,
     kFlyForwardFieldNumber = 11,
-    kRotateFieldNumber = 12,
+    kTurnYawFieldNumber = 12,
     kLandFieldNumber = 13,
   };
   // string id = 1;
@@ -1649,23 +1661,23 @@ class Command final : public ::google::protobuf::Message
   ::drone::FlyForward* PROTOBUF_NONNULL _internal_mutable_flyforward();
 
   public:
-  // .drone.Rotate rotate = 12;
-  bool has_rotate() const;
+  // .drone.TurnYaw turnYaw = 12;
+  bool has_turnyaw() const;
   private:
-  bool _internal_has_rotate() const;
+  bool _internal_has_turnyaw() const;
 
   public:
-  void clear_rotate() ;
-  const ::drone::Rotate& rotate() const;
-  [[nodiscard]] ::drone::Rotate* PROTOBUF_NULLABLE release_rotate();
-  ::drone::Rotate* PROTOBUF_NONNULL mutable_rotate();
-  void set_allocated_rotate(::drone::Rotate* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_rotate(::drone::Rotate* PROTOBUF_NULLABLE value);
-  ::drone::Rotate* PROTOBUF_NULLABLE unsafe_arena_release_rotate();
+  void clear_turnyaw() ;
+  const ::drone::TurnYaw& turnyaw() const;
+  [[nodiscard]] ::drone::TurnYaw* PROTOBUF_NULLABLE release_turnyaw();
+  ::drone::TurnYaw* PROTOBUF_NONNULL mutable_turnyaw();
+  void set_allocated_turnyaw(::drone::TurnYaw* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_turnyaw(::drone::TurnYaw* PROTOBUF_NULLABLE value);
+  ::drone::TurnYaw* PROTOBUF_NULLABLE unsafe_arena_release_turnyaw();
 
   private:
-  const ::drone::Rotate& _internal_rotate() const;
-  ::drone::Rotate* PROTOBUF_NONNULL _internal_mutable_rotate();
+  const ::drone::TurnYaw& _internal_turnyaw() const;
+  ::drone::TurnYaw* PROTOBUF_NONNULL _internal_mutable_turnyaw();
 
   public:
   // .drone.Land land = 13;
@@ -1694,7 +1706,7 @@ class Command final : public ::google::protobuf::Message
   class _Internal;
   void set_has_hover();
   void set_has_flyforward();
-  void set_has_rotate();
+  void set_has_turnyaw();
   void set_has_land();
   inline bool has_payload() const;
   inline void clear_has_payload();
@@ -1727,7 +1739,7 @@ class Command final : public ::google::protobuf::Message
       ::google::protobuf::internal::ConstantInitialized _constinit_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE hover_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE flyforward_;
-      ::google::protobuf::Message* PROTOBUF_NULLABLE rotate_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE turnyaw_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE land_;
     } payload_;
     ::uint32_t _oneof_case_[1];
@@ -1984,85 +1996,85 @@ inline ::drone::FlyForward* PROTOBUF_NONNULL Command::mutable_flyforward()
   return _msg;
 }
 
-// .drone.Rotate rotate = 12;
-inline bool Command::has_rotate() const {
-  return payload_case() == kRotate;
+// .drone.TurnYaw turnYaw = 12;
+inline bool Command::has_turnyaw() const {
+  return payload_case() == kTurnYaw;
 }
-inline bool Command::_internal_has_rotate() const {
-  return payload_case() == kRotate;
+inline bool Command::_internal_has_turnyaw() const {
+  return payload_case() == kTurnYaw;
 }
-inline void Command::set_has_rotate() {
-  _impl_._oneof_case_[0] = kRotate;
+inline void Command::set_has_turnyaw() {
+  _impl_._oneof_case_[0] = kTurnYaw;
 }
-inline void Command::clear_rotate() {
+inline void Command::clear_turnyaw() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (payload_case() == kRotate) {
+  if (payload_case() == kTurnYaw) {
     if (GetArena() == nullptr) {
-      delete _impl_.payload_.rotate_;
+      delete _impl_.payload_.turnyaw_;
     } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.rotate_);
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.turnyaw_);
     }
     clear_has_payload();
   }
 }
-inline ::drone::Rotate* PROTOBUF_NULLABLE Command::release_rotate() {
-  // @@protoc_insertion_point(field_release:drone.Command.rotate)
-  if (payload_case() == kRotate) {
+inline ::drone::TurnYaw* PROTOBUF_NULLABLE Command::release_turnyaw() {
+  // @@protoc_insertion_point(field_release:drone.Command.turnYaw)
+  if (payload_case() == kTurnYaw) {
     clear_has_payload();
-    auto* temp = reinterpret_cast<::drone::Rotate*>(_impl_.payload_.rotate_);
+    auto* temp = reinterpret_cast<::drone::TurnYaw*>(_impl_.payload_.turnyaw_);
     if (GetArena() != nullptr) {
       temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
     }
-    _impl_.payload_.rotate_ = nullptr;
+    _impl_.payload_.turnyaw_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::drone::Rotate& Command::_internal_rotate() const {
-  return payload_case() == kRotate ? static_cast<const ::drone::Rotate&>(*reinterpret_cast<::drone::Rotate*>(_impl_.payload_.rotate_))
-                     : reinterpret_cast<const ::drone::Rotate&>(::drone::_Rotate_default_instance_);
+inline const ::drone::TurnYaw& Command::_internal_turnyaw() const {
+  return payload_case() == kTurnYaw ? static_cast<const ::drone::TurnYaw&>(*reinterpret_cast<::drone::TurnYaw*>(_impl_.payload_.turnyaw_))
+                     : reinterpret_cast<const ::drone::TurnYaw&>(::drone::_TurnYaw_default_instance_);
 }
-inline const ::drone::Rotate& Command::rotate() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:drone.Command.rotate)
-  return _internal_rotate();
+inline const ::drone::TurnYaw& Command::turnyaw() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:drone.Command.turnYaw)
+  return _internal_turnyaw();
 }
-inline ::drone::Rotate* PROTOBUF_NULLABLE Command::unsafe_arena_release_rotate() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:drone.Command.rotate)
-  if (payload_case() == kRotate) {
+inline ::drone::TurnYaw* PROTOBUF_NULLABLE Command::unsafe_arena_release_turnyaw() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:drone.Command.turnYaw)
+  if (payload_case() == kTurnYaw) {
     clear_has_payload();
-    auto* temp = reinterpret_cast<::drone::Rotate*>(_impl_.payload_.rotate_);
-    _impl_.payload_.rotate_ = nullptr;
+    auto* temp = reinterpret_cast<::drone::TurnYaw*>(_impl_.payload_.turnyaw_);
+    _impl_.payload_.turnyaw_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void Command::unsafe_arena_set_allocated_rotate(
-    ::drone::Rotate* PROTOBUF_NULLABLE value) {
+inline void Command::unsafe_arena_set_allocated_turnyaw(
+    ::drone::TurnYaw* PROTOBUF_NULLABLE value) {
   // We rely on the oneof clear method to free the earlier contents
   // of this oneof. We can directly use the pointer we're given to
   // set the new value.
   clear_payload();
   if (value) {
-    set_has_rotate();
-    _impl_.payload_.rotate_ = reinterpret_cast<::google::protobuf::Message*>(value);
+    set_has_turnyaw();
+    _impl_.payload_.turnyaw_ = reinterpret_cast<::google::protobuf::Message*>(value);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:drone.Command.rotate)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:drone.Command.turnYaw)
 }
-inline ::drone::Rotate* PROTOBUF_NONNULL Command::_internal_mutable_rotate() {
-  if (payload_case() != kRotate) {
+inline ::drone::TurnYaw* PROTOBUF_NONNULL Command::_internal_mutable_turnyaw() {
+  if (payload_case() != kTurnYaw) {
     clear_payload();
-    set_has_rotate();
-    _impl_.payload_.rotate_ = reinterpret_cast<::google::protobuf::Message*>(
-        ::google::protobuf::Message::DefaultConstruct<::drone::Rotate>(GetArena()));
+    set_has_turnyaw();
+    _impl_.payload_.turnyaw_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::drone::TurnYaw>(GetArena()));
   }
-  return reinterpret_cast<::drone::Rotate*>(_impl_.payload_.rotate_);
+  return reinterpret_cast<::drone::TurnYaw*>(_impl_.payload_.turnyaw_);
 }
-inline ::drone::Rotate* PROTOBUF_NONNULL Command::mutable_rotate()
+inline ::drone::TurnYaw* PROTOBUF_NONNULL Command::mutable_turnyaw()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::drone::Rotate* _msg = _internal_mutable_rotate();
-  // @@protoc_insertion_point(field_mutable:drone.Command.rotate)
+  ::drone::TurnYaw* _msg = _internal_mutable_turnyaw();
+  // @@protoc_insertion_point(field_mutable:drone.Command.turnYaw)
   return _msg;
 }
 
@@ -2242,35 +2254,6 @@ inline void FlyForward::_internal_set_velocity(double value) {
 
 // -------------------------------------------------------------------
 
-// Rotate
-
-// double degrees = 1;
-inline void Rotate::clear_degrees() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.degrees_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000001U);
-}
-inline double Rotate::degrees() const {
-  // @@protoc_insertion_point(field_get:drone.Rotate.degrees)
-  return _internal_degrees();
-}
-inline void Rotate::set_degrees(double value) {
-  _internal_set_degrees(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_set:drone.Rotate.degrees)
-}
-inline double Rotate::_internal_degrees() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.degrees_;
-}
-inline void Rotate::_internal_set_degrees(double value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.degrees_ = value;
-}
-
-// -------------------------------------------------------------------
-
 // Land
 
 // string message = 1;
@@ -2336,6 +2319,60 @@ inline void Land::set_allocated_message(::std::string* PROTOBUF_NULLABLE value) 
     _impl_.message_.Set("", GetArena());
   }
   // @@protoc_insertion_point(field_set_allocated:drone.Land.message)
+}
+
+// -------------------------------------------------------------------
+
+// TurnYaw
+
+// double deg = 1;
+inline void TurnYaw::clear_deg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.deg_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline double TurnYaw::deg() const {
+  // @@protoc_insertion_point(field_get:drone.TurnYaw.deg)
+  return _internal_deg();
+}
+inline void TurnYaw::set_deg(double value) {
+  _internal_set_deg(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:drone.TurnYaw.deg)
+}
+inline double TurnYaw::_internal_deg() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.deg_;
+}
+inline void TurnYaw::_internal_set_deg(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.deg_ = value;
+}
+
+// double seconds = 2;
+inline void TurnYaw::clear_seconds() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.seconds_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline double TurnYaw::seconds() const {
+  // @@protoc_insertion_point(field_get:drone.TurnYaw.seconds)
+  return _internal_seconds();
+}
+inline void TurnYaw::set_seconds(double value) {
+  _internal_set_seconds(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:drone.TurnYaw.seconds)
+}
+inline double TurnYaw::_internal_seconds() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.seconds_;
+}
+inline void TurnYaw::_internal_set_seconds(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.seconds_ = value;
 }
 
 // -------------------------------------------------------------------
