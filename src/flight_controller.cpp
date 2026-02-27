@@ -22,7 +22,7 @@ FlightController::FlightController(std::shared_ptr<mavsdk::System> system)
 
 FlightController::~FlightController()
 {
-    stop_offboard_best_effort();
+    stop_offboard_session_best_effort();
     stop_streaming_thread();
 }
 
@@ -38,12 +38,12 @@ void FlightController::set_error(std::string msg)
     _last_error = std::move(msg);
 }
 
-void FlightController::set_cmd(float forward, float right, float down, float yawspeed_deg_s)
+void FlightController::set_cmd(float forward_m_s, float right_m_s, float down_m_s, float yawspeed_deg_s)
 {
-    std::lock_guard<std::mutex> lk(_cmd_mutex);
-    _current_cmd.forward_m_s = forward;
-    _current_cmd.right_m_s = right;
-    _current_cmd.down_m_s = down;
+    std::lock_guard<std::mutex> lock(_cmd_mutex);
+    _current_cmd.forward_m_s = forward_m_s;
+    _current_cmd.right_m_s = right_m_s;
+    _current_cmd.down_m_s = down_m_s;
     _current_cmd.yawspeed_deg_s = yawspeed_deg_s;
 }
 
@@ -110,6 +110,7 @@ bool FlightController::ensure_armed(std::chrono::seconds timeout)
 
 bool FlightController::ensure_airborne(std::chrono::seconds timeout)
 {
+    if (_telemetry.in_air()) return true;
     auto r = _action.takeoff();
     if (r != mavsdk::Action::Result::Success) {
         set_error(std::string("Takeoff failed: ") + action_result_to_string(r));
@@ -126,7 +127,7 @@ bool FlightController::ensure_airborne(std::chrono::seconds timeout)
             return false;
         }
         std::cout << "The vechicle is not in air\n";
-        std::this_thread::sleep_for(200ms);
+        std::this_thread::sleep_for(1000ms);
     }
     std::cout << "The vechicle is in air 2\n";
     return true;
@@ -146,51 +147,70 @@ bool FlightController::wait_until_ready_for_offboard(std::chrono::seconds timeou
         std::this_thread::sleep_for(200ms);
     }
 }
+void FlightController::offboard_stream_loop()
+{
+    while (!_stop_thread.load()) {
+        mavsdk::Offboard::VelocityBodyYawspeed cmd_copy{};
+        {
+            std::lock_guard<std::mutex> lock(_cmd_mutex);
+            cmd_copy = _current_cmd;
+        }
+        _offboard.set_velocity_body(cmd_copy);
+        std::this_thread::sleep_for(50ms);
+    }
+}
+void FlightController::stop_offboard_session_best_effort()
+{
+    if (!_offboard_running.load()) {
+        return;
+    }
 
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+
+    _stop_thread.store(true);
+    if (_stream_thread.joinable()) {
+        _stream_thread.join();
+    }
+    _offboard.stop();
+
+    _offboard_running.store(false);
+    std::cout << "[FC] Offboard session stopped\n";
+}
 bool FlightController::start_offboard_session(std::chrono::seconds timeout)
 {
-    if (_offboard_active.load()) return true;
+    if (_offboard_running.load()) {
+        return true;
+    }
 
-    start_streaming_thread();
+    if (!wait_until_ready_for_offboard(timeout)) {
+        std::cout << "[FC] Not ready for offboard\n";
+        return false;
+    }
 
-    set_cmd(0, 0, 0, 0);
     for (int i = 0; i < 20; ++i) {
-        _offboard.set_velocity_body(get_cmd_copy());
+        mavsdk::Offboard::VelocityBodyYawspeed cmd_copy{};
+        {
+            std::lock_guard<std::mutex> lock(_cmd_mutex);
+            cmd_copy = _current_cmd;
+        }
+        _offboard.set_velocity_body(cmd_copy);
         std::this_thread::sleep_for(50ms);
     }
 
     auto r = _offboard.start();
     if (r != mavsdk::Offboard::Result::Success) {
-        set_error(std::string("Offboard start failed: ") + offboard_result_to_string(r));
+        std::cout << "[FC] Offboard.start() failed\n";
         return false;
     }
-
-    // wait a bit to see if mode switches (optional but useful)
-    const auto start = std::chrono::steady_clock::now();
-    while (true) {
-        const auto mode = _telemetry.flight_mode();
-        if (mode == mavsdk::Telemetry::FlightMode::Offboard) break;
-
-        if (std::chrono::steady_clock::now() - start > timeout) {
-            // We can still keep streaming, but this usually means PX4 rejected/left offboard
-            set_error("Offboard start returned Success, but flight mode did not become Offboard");
-            // treat as failure to be strict
-            return false;
-        }
-        std::this_thread::sleep_for(100ms);
+    _stop_thread.store(false);
+    _offboard_running.store(true);
+    _stream_thread = std::thread(&FlightController::offboard_stream_loop, this);
+    while (_telemetry.flight_mode() != mavsdk::Telemetry::FlightMode::Offboard) {
+        std::cout << "The drone is being checked for flight satus and waits for Offboard\n";
+        std::this_thread::sleep_for(600ms);
     }
-
-    _offboard_active.store(true);
+    std::cout << "[FC] Offboard session started (streaming 20Hz)\n";
     return true;
-}
-
-void FlightController::stop_offboard_best_effort()
-{
-    if (!_offboard_active.exchange(false)) return;
-
-    set_cmd(0, 0, 0, 0);
-    std::this_thread::sleep_for(200ms);
-    _offboard.stop();
 }
 
 void FlightController::schedule_stop_after(std::chrono::duration<double> d,
@@ -254,10 +274,6 @@ bool FlightController::request_fly_forward(double seconds, double velocity_m_s)
     if (!ensure_airborne(10s)) return false;
     if (!wait_until_ready_for_offboard(10s)) return false;
     if (!start_offboard_session(2s)) return false;
-    while (_telemetry.flight_mode() != mavsdk::Telemetry::FlightMode::Offboard) {
-        std::cout << "The drone is being checked for flight satus and waits for Offboard";
-        std::this_thread::sleep_for(200ms);
-    }
     std::cout << "[API] Command accepted (queued) after checks\n";
 
     set_cmd(static_cast<float>(velocity_m_s), 0.0f, 0.0f, 0.0f);
@@ -292,7 +308,7 @@ bool FlightController::request_stop()
 bool FlightController::request_land()
 {
     set_cmd(0, 0, 0, 0);
-    stop_offboard_best_effort();
+    stop_offboard_session_best_effort();
 
     auto r = _action.land();
     if (r != mavsdk::Action::Result::Success) {
