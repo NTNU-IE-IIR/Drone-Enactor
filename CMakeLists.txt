@@ -64,6 +64,8 @@ add_executable(drone_api_server
         src/server_main.cpp
         src/drone_control_service.cpp
         src/flight_helpers.cpp
+        src/flight_controller.cpp
+        src/flight_controller.h
 )
 target_link_libraries(drone_api_server PRIVATE drone_proto MAVSDK::mavsdk)
 add_dependencies(drone_api_server drone_proto)

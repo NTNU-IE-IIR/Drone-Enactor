@@ -24,12 +24,27 @@ const char* action_result_to_string(mavsdk::Action::Result r)
     }
 }
 
+const char* offboard_result_to_string(mavsdk::Offboard::Result r)
+{
+    using R = mavsdk::Offboard::Result;
+    switch (r) {
+        case R::Success: return "Success";
+        case R::NoSystem: return "NoSystem";
+        case R::ConnectionError: return "ConnectionError";
+        case R::Busy: return "Busy";
+        case R::CommandDenied: return "CommandDenied";
+        case R::Timeout: return "Timeout";
+        case R::NoSetpointSet: return "NoSetpointSet";
+        case R::Failed: return "Failed";
+        default: return "Unmapped";
+    }
+}
+
 bool ensure_airborne_or_reply(
     mavsdk::Action& action,
     mavsdk::Telemetry& telemetry,
     drone::CommandAck* reply)
 {
-    // Wait until PX4 is happy (SITL often needs time)
     const auto start = std::chrono::steady_clock::now();
     while (!telemetry.health_all_ok()) {
         if (std::chrono::steady_clock::now() - start > 10s) {
@@ -49,7 +64,6 @@ bool ensure_airborne_or_reply(
             return false;
         }
 
-        // Wait until armed flag updates
         const auto arm_start = std::chrono::steady_clock::now();
         while (!telemetry.armed()) {
             if (std::chrono::steady_clock::now() - arm_start > 5s) {
@@ -61,7 +75,6 @@ bool ensure_airborne_or_reply(
         }
     }
 
-    // Takeoff if needed
     if (!telemetry.in_air()) {
         auto r = action.takeoff();
         if (r != mavsdk::Action::Result::Success) {
@@ -70,7 +83,6 @@ bool ensure_airborne_or_reply(
             return false;
         }
 
-        // Wait until actually in air
         const auto to_start = std::chrono::steady_clock::now();
         while (!telemetry.in_air()) {
             if (std::chrono::steady_clock::now() - to_start > 10s) {
@@ -89,7 +101,6 @@ bool wait_until_ready_for_offboard_or_reply(
     mavsdk::Telemetry& telemetry,
     drone::CommandAck* reply)
 {
-    // Wait until Takeoff mode is finished (PX4 often stays here briefly)
     const auto start = std::chrono::steady_clock::now();
     while (telemetry.flight_mode() == mavsdk::Telemetry::FlightMode::Takeoff) {
         if (std::chrono::steady_clock::now() - start > 10s) {

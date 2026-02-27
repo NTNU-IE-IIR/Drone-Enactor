@@ -44,7 +44,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 68,
+				"line" : 70,
 				"parent" : 0
 			},
 			{
@@ -446,7 +446,7 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 69,
+				"line" : 71,
 				"parent" : 0
 			}
 		]
@@ -497,7 +497,8 @@
 			[
 				0,
 				1,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -1078,7 +1079,15 @@
 			[
 				0,
 				1,
-				2
+				2,
+				3
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				4
 			]
 		}
 	],
@@ -1101,6 +1110,17 @@
 			"compileGroupIndex" : 0,
 			"path" : "src/flight_helpers.cpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/flight_controller.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/flight_controller.h",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"
