@@ -4,6 +4,7 @@
 #include <iostream>
 
 using namespace std::chrono_literals;
+double takeoff_altitude = 2.0f;
 
 FlightController::FlightController(std::shared_ptr<mavsdk::System> system)
     : _system(std::move(system)),
@@ -11,7 +12,7 @@ FlightController::FlightController(std::shared_ptr<mavsdk::System> system)
       _telemetry(_system),
       _offboard(_system)
 {
-    _action.set_takeoff_altitude(2.0f);
+    _action.set_takeoff_altitude(takeoff_altitude);
 
     _current_cmd.forward_m_s = 0.0f;
     _current_cmd.right_m_s = 0.0f;
@@ -75,7 +76,10 @@ void FlightController::stop_streaming_thread()
 
 bool FlightController::ensure_armed(std::chrono::seconds timeout)
 {
-    if (_telemetry.armed()) return true;
+    if (_telemetry.armed()) {
+        std::cout << "The arming was succesfully completed \n";
+        return true;
+    }
 
     const auto start = std::chrono::steady_clock::now();
     while (!_telemetry.health_all_ok()) {
@@ -100,27 +104,31 @@ bool FlightController::ensure_armed(std::chrono::seconds timeout)
         }
         std::this_thread::sleep_for(100ms);
     }
+    std::cout << "The arming was succesfully completed \n";
     return true;
 }
 
 bool FlightController::ensure_airborne(std::chrono::seconds timeout)
 {
-    if (_telemetry.in_air()) return true;
-
     auto r = _action.takeoff();
     if (r != mavsdk::Action::Result::Success) {
         set_error(std::string("Takeoff failed: ") + action_result_to_string(r));
         return false;
     }
 
+    const float target = static_cast<float>(takeoff_altitude);
+    const float tol = 0.2f;
+
     const auto start = std::chrono::steady_clock::now();
-    while (!_telemetry.in_air()) {
+    while (_telemetry.position().relative_altitude_m < target - tol ) {
         if (std::chrono::steady_clock::now() - start > timeout) {
             set_error("Takeoff sent, but telemetry.in_air() stayed false");
             return false;
         }
+        std::cout << "The vechicle is not in air\n";
         std::this_thread::sleep_for(200ms);
     }
+    std::cout << "The vechicle is in air 2\n";
     return true;
 }
 

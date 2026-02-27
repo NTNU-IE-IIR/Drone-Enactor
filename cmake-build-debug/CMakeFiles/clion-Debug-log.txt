@@ -1,5 +1,5 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/49kotosk/CLionProjects/BachelorProsjektAPI -B /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug
 -- Found RE2 via CMake.
--- Configuring done (0.3s)
+-- Configuring done (0.1s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug
