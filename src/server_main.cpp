@@ -33,14 +33,13 @@ static std::shared_ptr<mavsdk::System> wait_for_autopilot(mavsdk::Mavsdk& mavsdk
 
 int main()
 {
-    // 1️⃣ Connect MAVSDK to PX4
     mavsdk::Mavsdk mavsdk{
         mavsdk::Mavsdk::Configuration{
             mavsdk::ComponentType::GroundStation
         }
     };
 
-    const std::string conn = "udpin://0.0.0.0:14540";
+    const std::string conn = "udpin://0.0.0.0:14550";
 
     auto result = mavsdk.add_any_connection(conn);
     if (result != mavsdk::ConnectionResult::Success) {

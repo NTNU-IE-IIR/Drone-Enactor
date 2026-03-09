@@ -1,21 +1,21 @@
 #pragma once
+
 #include <grpcpp/grpcpp.h>
 #include "drone_control.grpc.pb.h"
-
-class FlightController;
+#include "flight_controller.h"
 
 class DroneControlService final : public drone::DroneControl::Service {
 public:
-    explicit DroneControlService(FlightController& fc) : _fc(fc) {}
+    explicit DroneControlService(FlightController& controller);
 
     grpc::Status Enqueue(grpc::ServerContext*,
                          const drone::Command* req,
                          drone::CommandAck* reply) override;
 
     grpc::Status StopNow(grpc::ServerContext*,
-                         const drone::StopRequest*,
+                         const drone::StopRequest* req,
                          drone::StopReply* reply) override;
 
 private:
-    FlightController& _fc;
+    FlightController& _controller;
 };
