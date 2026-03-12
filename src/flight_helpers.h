@@ -7,6 +7,10 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 
 #include "drone_control.pb.h"
+#include <mavsdk/plugins/offboard/offboard.h>
+
+const char* action_result_to_string(mavsdk::Action::Result r);
+const char* offboard_result_to_string(mavsdk::Offboard::Result r);
 
 
 bool ensure_airborne_or_reply(
