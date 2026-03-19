@@ -4,14 +4,22 @@ project(BachelorProsjektAPI LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Prefer Homebrew, avoid conda
+list(PREPEND CMAKE_PREFIX_PATH
+        "/opt/homebrew"
+        "/opt/homebrew/opt/abseil"
+        "/opt/homebrew/lib/cmake"
+)
+list(APPEND CMAKE_IGNORE_PREFIX_PATH "/usr/local")
+list(APPEND CMAKE_IGNORE_PATH "/usr/local" "/usr/local/include" "/usr/local/lib")
+
+
 list(PREPEND CMAKE_PREFIX_PATH "/opt/homebrew" "/opt/homebrew/opt/abseil")
 set(CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH OFF)
 set(CMAKE_FIND_USE_PACKAGE_REGISTRY OFF)
 
 find_package(absl CONFIG REQUIRED)
 
-# protobuf may expect absl::absl_check
+
 if(NOT TARGET absl::absl_check)
     if(TARGET absl::check)
         add_library(absl::absl_check ALIAS absl::check)
@@ -27,9 +35,11 @@ endif()
 
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
-find_package(MAVSDK REQUIRED)
+set(MAVSDK_DIR "/opt/homebrew/lib/cmake/MAVSDK")
+find_package(MAVSDK REQUIRED CONFIG)
+get_target_property(MAVSDK_INCLUDE_DIRS MAVSDK::mavsdk INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "MAVSDK include dirs: ${MAVSDK_INCLUDE_DIRS}")
 
-# ---- Proto generation ----
 set(PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
 set(PROTO_FILE "${PROTO_DIR}/drone_control.proto")
 set(GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")

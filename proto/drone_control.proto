@@ -1,13 +1,30 @@
 syntax = "proto3";
+
 package drone;
+
+import "google/protobuf/empty.proto";
 
 service DroneControl {
   rpc Enqueue(Command) returns (CommandAck);
   rpc StopNow(StopRequest) returns (StopReply);
+  rpc GetStatus(google.protobuf.Empty) returns (StatusReply);
+}
+
+enum ExecState {
+  DISCONNECTED = 0;
+  IDLE = 1;
+  ARMING = 2;
+  TAKINGOFF = 3;
+  HOVERING = 4;
+  EXECUTINGCOMMAND = 5;
+  LANDING = 6;
+  EMERGENCYSTOPPED = 7;
+  ERROR = 8;
 }
 
 message Command {
   string id = 1;
+
   oneof payload {
     Hover hover = 10;
     FlyForward flyForward = 11;
@@ -16,11 +33,46 @@ message Command {
   }
 }
 
-message Hover { double seconds = 1; }
-message FlyForward { double seconds = 1; double velocity = 2;}
-message Land {string message = 1;}
-message TurnYaw{ double deg = 1; double seconds = 2;}
+message Hover {
+  double seconds = 1;
+}
 
-message CommandAck { string id = 1; bool accepted = 2; string message = 3;}
+message FlyForward {
+  double seconds = 1;
+  double velocity = 2;
+}
+
+message TurnYaw {
+  double deg = 1;
+  double seconds = 2;
+}
+
+message Land {
+  string message = 1;
+}
+
+message CommandAck {
+  string id = 1;
+  bool accepted = 2;
+  string message = 3;
+  ExecState state = 4;
+}
+
 message StopRequest {}
-message StopReply { bool ok = 1; string message = 2; }
+
+message StopReply {
+  bool ok = 1;
+  string message = 2;
+  ExecState state = 3;
+}
+
+message StatusReply {
+  ExecState state = 1;
+  string last_error = 2;
+  bool connected = 3;
+  bool armed = 4;
+  bool in_air = 5;
+  float relative_altitude_m = 6;
+  int32 flight_mode = 7;
+  uint32 queue_size = 8;
+}

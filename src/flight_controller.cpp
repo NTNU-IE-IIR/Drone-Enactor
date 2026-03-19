@@ -4,7 +4,12 @@
 #include <iostream>
 
 using namespace std::chrono_literals;
-double takeoff_altitude = 2.0f;
+
+namespace {
+constexpr float kTakeoffAltitudeM = 2.0f;
+constexpr float kTakeoffToleranceM = 0.2f;
+constexpr auto kStreamPeriod = 50ms;
+}
 
 FlightController::FlightController(std::shared_ptr<mavsdk::System> system)
     : _system(std::move(system)),
@@ -12,12 +17,18 @@ FlightController::FlightController(std::shared_ptr<mavsdk::System> system)
       _telemetry(_system),
       _offboard(_system)
 {
-    _action.set_takeoff_altitude(2.0f);
+    _action.set_takeoff_altitude(kTakeoffAltitudeM);
 
     _current_cmd.forward_m_s = 0.0f;
     _current_cmd.right_m_s = 0.0f;
     _current_cmd.down_m_s = 0.0f;
     _current_cmd.yawspeed_deg_s = 0.0f;
+
+    if (_system && _system->has_autopilot()) {
+        _state.store(ExecState::Idle);
+    } else {
+        _state.store(ExecState::Disconnected);
+    }
 
     start_worker();
 }
@@ -29,17 +40,54 @@ FlightController::~FlightController()
     stop_streaming_thread();
 }
 
-
-std::string FlightController::last_error() const
+void FlightController::set_state(ExecState new_state)
 {
-    std::lock_guard<std::mutex> lk(_err_mutex);
-    return _last_error;
+    _state.store(new_state);
 }
 
 void FlightController::set_error(std::string msg)
 {
-    std::lock_guard<std::mutex> lk(_err_mutex);
-    _last_error = std::move(msg);
+    {
+        std::lock_guard<std::mutex> lock(_err_mutex);
+        _last_error = std::move(msg);
+    }
+    _state.store(ExecState::Error);
+}
+
+void FlightController::clear_error()
+{
+    std::lock_guard<std::mutex> lock(_err_mutex);
+    _last_error.clear();
+}
+
+std::string FlightController::last_error() const
+{
+    std::lock_guard<std::mutex> lock(_err_mutex);
+    return _last_error;
+}
+
+FlightController::ExecState FlightController::current_state() const
+{
+    return _state.load();
+}
+
+FlightController::StatusSnapshot FlightController::get_status() const
+{
+    StatusSnapshot status{};
+    status.state = _state.load();
+    status.last_error = last_error();
+    status.connected = (_system && _system->has_autopilot());
+    status.armed = _telemetry.armed();
+    status.in_air = _telemetry.in_air();
+    status.relative_altitude_m = _telemetry.position().relative_altitude_m;
+    status.flight_mode = static_cast<int>(_telemetry.flight_mode());
+
+    {
+        std::lock_guard<std::mutex> lock(_queue_mutex);
+        status.queue_size = static_cast<std::uint32_t>(_command_queue.size());
+    }
+
+    return status;
 }
 
 void FlightController::set_cmd(float forward_m_s, float right_m_s, float down_m_s, float yawspeed_deg_s)
@@ -51,25 +99,20 @@ void FlightController::set_cmd(float forward_m_s, float right_m_s, float down_m_
     _current_cmd.yawspeed_deg_s = yawspeed_deg_s;
 }
 
-mavsdk::Offboard::VelocityBodyYawspeed FlightController::get_cmd_copy()
+mavsdk::Offboard::VelocityBodyYawspeed FlightController::get_cmd_copy() const
 {
-    std::lock_guard<std::mutex> lk(_cmd_mutex);
+    std::lock_guard<std::mutex> lock(_cmd_mutex);
     return _current_cmd;
 }
 
 void FlightController::start_streaming_thread()
 {
-    if (_stream_thread.joinable()) return;
+    if (_stream_thread.joinable()) {
+        return;
+    }
 
     _stop_stream_thread.store(false);
-
-    _stream_thread = std::thread([this]() {
-        while (!_stop_stream_thread.load()) {
-            auto cmd = get_cmd_copy();
-            _offboard.set_velocity_body(cmd);
-            std::this_thread::sleep_for(50ms);
-        }
-    });
+    _stream_thread = std::thread(&FlightController::offboard_stream_loop, this);
 }
 
 void FlightController::stop_streaming_thread()
@@ -81,12 +124,22 @@ void FlightController::stop_streaming_thread()
     }
 }
 
+void FlightController::offboard_stream_loop()
+{
+    while (!_stop_stream_thread.load()) {
+        const auto cmd = get_cmd_copy();
+        _offboard.set_velocity_body(cmd);
+        std::this_thread::sleep_for(kStreamPeriod);
+    }
+}
+
 bool FlightController::ensure_armed(std::chrono::seconds timeout)
 {
     if (_telemetry.armed()) {
-        std::cout << "The arming was succesfully completed \n";
         return true;
     }
+
+    set_state(ExecState::Arming);
 
     const auto start = std::chrono::steady_clock::now();
     while (!_telemetry.health_all_ok()) {
@@ -97,9 +150,9 @@ bool FlightController::ensure_armed(std::chrono::seconds timeout)
         std::this_thread::sleep_for(200ms);
     }
 
-    auto r = _action.arm();
-    if (r != mavsdk::Action::Result::Success) {
-        set_error(std::string("Arm failed: ") + action_result_to_string(r));
+    const auto result = _action.arm();
+    if (result != mavsdk::Action::Result::Success) {
+        set_error(std::string("Arm failed: ") + action_result_to_string(result));
         return false;
     }
 
@@ -111,71 +164,55 @@ bool FlightController::ensure_armed(std::chrono::seconds timeout)
         }
         std::this_thread::sleep_for(100ms);
     }
-    std::cout << "The arming was succesfully completed \n";
+
     return true;
 }
 
 bool FlightController::ensure_airborne(std::chrono::seconds timeout)
 {
-    if (_telemetry.in_air()) return true;
-    auto r = _action.takeoff();
-    if (r != mavsdk::Action::Result::Success) {
-        set_error(std::string("Takeoff failed: ") + action_result_to_string(r));
+    if (_telemetry.in_air() &&
+        _telemetry.position().relative_altitude_m >= (kTakeoffAltitudeM - kTakeoffToleranceM)) {
+        return true;
+    }
+
+    set_state(ExecState::TakingOff);
+
+    const auto result = _action.takeoff();
+    if (result != mavsdk::Action::Result::Success) {
+        set_error(std::string("Takeoff failed: ") + action_result_to_string(result));
         return false;
     }
 
-    const float target = static_cast<float>(takeoff_altitude);
-    const float tol = 0.2f;
-
     const auto start = std::chrono::steady_clock::now();
-    while (_telemetry.position().relative_altitude_m < target - tol ) {
+    while (_telemetry.position().relative_altitude_m < (kTakeoffAltitudeM - kTakeoffToleranceM)) {
         if (std::chrono::steady_clock::now() - start > timeout) {
-            set_error("Takeoff sent, but telemetry.in_air() stayed false");
+            set_error("Takeoff sent, but target altitude was never reached");
             return false;
         }
-        std::cout << "The vechicle is not in air\n";
-        std::this_thread::sleep_for(1000ms);
+        std::this_thread::sleep_for(200ms);
     }
-    std::cout << "The vechicle is in air 2\n";
+
     return true;
 }
 
 bool FlightController::wait_until_ready_for_offboard(std::chrono::seconds timeout)
 {
-
     const auto start = std::chrono::steady_clock::now();
+
     while (true) {
-        if (_telemetry.in_air() && _telemetry.health_all_ok()) return true;
+        if (_telemetry.in_air() && _telemetry.health_all_ok()) {
+            return true;
+        }
 
         if (std::chrono::steady_clock::now() - start > timeout) {
             set_error("Not ready for offboard within timeout");
             return false;
         }
+
         std::this_thread::sleep_for(200ms);
     }
 }
-void FlightController::offboard_stream_loop()
-{
-    while (!_stop_stream_thread.load()) {
-        auto cmd_copy = get_cmd_copy();
-        _offboard.set_velocity_body(cmd_copy);
-        std::this_thread::sleep_for(50ms);
-    }
-}
-void FlightController::stop_offboard_session_best_effort()
-{
-    if (!_offboard_running.load()) {
-        return;
-    }
 
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-
-    stop_streaming_thread();
-    _offboard.stop();
-
-    _offboard_running.store(false);
-    std::cout << "[FC] Offboard session stopped\n";
-}
 bool FlightController::start_offboard_session(std::chrono::seconds timeout)
 {
     if (_offboard_running.load()) {
@@ -183,36 +220,46 @@ bool FlightController::start_offboard_session(std::chrono::seconds timeout)
     }
 
     if (!wait_until_ready_for_offboard(timeout)) {
-        std::cout << "[FC] Not ready for offboard\n";
         return false;
     }
 
     for (int i = 0; i < 20; ++i) {
-        mavsdk::Offboard::VelocityBodyYawspeed cmd_copy{};
-        {
-            std::lock_guard<std::mutex> lock(_cmd_mutex);
-            cmd_copy = _current_cmd;
-        }
-        _offboard.set_velocity_body(cmd_copy);
-        std::this_thread::sleep_for(50ms);
+        _offboard.set_velocity_body(get_cmd_copy());
+        std::this_thread::sleep_for(kStreamPeriod);
     }
 
-    auto r = _offboard.start();
-    if (r != mavsdk::Offboard::Result::Success) {
-        std::cout << "[FC] Offboard.start() failed\n";
+    const auto result = _offboard.start();
+    if (result != mavsdk::Offboard::Result::Success) {
+        set_error(std::string("Offboard start failed: ") + offboard_result_to_string(result));
         return false;
     }
-    _stop_stream_thread.store(false);
+
     _offboard_running.store(true);
     start_streaming_thread();
+
+    const auto start = std::chrono::steady_clock::now();
     while (_telemetry.flight_mode() != mavsdk::Telemetry::FlightMode::Offboard) {
-        std::cout << "The drone is being checked for flight satus and waits for Offboard\n";
-        std::this_thread::sleep_for(600ms);
+        if (std::chrono::steady_clock::now() - start > 5s) {
+            set_error("Timed out waiting for Offboard mode");
+            return false;
+        }
+        std::this_thread::sleep_for(100ms);
     }
-    std::cout << "[FC] Offboard session started (streaming 20Hz)\n";
+
     return true;
 }
 
+void FlightController::stop_offboard_session_best_effort()
+{
+    if (!_offboard_running.load()) {
+        return;
+    }
+
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    stop_streaming_thread();
+    (void)_offboard.stop();
+    _offboard_running.store(false);
+}
 
 bool FlightController::enqueue_hover(double seconds)
 {
@@ -228,19 +275,6 @@ bool FlightController::enqueue_hover(double seconds)
     _queue_cv.notify_one();
     return true;
 }
-bool FlightController::execute_land()
-{
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-    stop_offboard_session_best_effort();
-
-    auto r = _action.land();
-    if (r != mavsdk::Action::Result::Success) {
-        set_error(std::string("Land failed: ") + action_result_to_string(r));
-        return false;
-    }
-
-    return true;
-}
 
 bool FlightController::enqueue_fly_forward(double seconds, double velocity_m_s)
 {
@@ -252,7 +286,6 @@ bool FlightController::enqueue_fly_forward(double seconds, double velocity_m_s)
         set_error("Velocity must be non-zero");
         return false;
     }
-    std::cout << "You are now oin the enqueue_fly_forward \n";
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
@@ -286,8 +319,10 @@ bool FlightController::enqueue_land()
     _queue_cv.notify_one();
     return true;
 }
+
 bool FlightController::request_stop()
 {
+    set_state(ExecState::EmergencyStopped);
     _interrupt_current.store(true);
 
     {
@@ -296,20 +331,27 @@ bool FlightController::request_stop()
     }
 
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    stop_offboard_session_best_effort();
     return true;
 }
+
 void FlightController::start_worker()
 {
-    if (_worker_running.exchange(true)) return;
+    if (_worker_running.exchange(true)) {
+        return;
+    }
 
     _worker_thread = std::thread(&FlightController::worker_loop, this);
 }
 
 void FlightController::stop_worker()
 {
-    if (!_worker_running.exchange(false)) return;
+    if (!_worker_running.exchange(false)) {
+        return;
+    }
 
     _queue_cv.notify_all();
+
     if (_worker_thread.joinable()) {
         _worker_thread.join();
     }
@@ -317,12 +359,17 @@ void FlightController::stop_worker()
 
 void FlightController::worker_loop()
 {
+    if (_system && _system->has_autopilot()) {
+        set_state(ExecState::Idle);
+    } else {
+        set_state(ExecState::Disconnected);
+    }
+
     while (_worker_running.load()) {
-        QueuedCommand cmd;
+        QueuedCommand cmd{};
 
         {
             std::unique_lock<std::mutex> lock(_queue_mutex);
-
             _queue_cv.wait(lock, [this] {
                 return !_command_queue.empty() || !_worker_running.load();
             });
@@ -336,20 +383,35 @@ void FlightController::worker_loop()
         }
 
         _interrupt_current.store(false);
+        clear_error();
 
+        bool ok = false;
         switch (cmd.type) {
             case QueuedCommand::Type::Hover:
-                execute_hover(cmd.a);
-            break;
+                ok = execute_hover(cmd.a);
+                break;
             case QueuedCommand::Type::FlyForward:
-                execute_fly_forward(cmd.a, cmd.b);
-            break;
+                ok = execute_fly_forward(cmd.a, cmd.b);
+                break;
             case QueuedCommand::Type::TurnYaw:
-                execute_turn_yaw(cmd.a, cmd.b);
-            break;
+                ok = execute_turn_yaw(cmd.a, cmd.b);
+                break;
             case QueuedCommand::Type::Land:
-                execute_land();
-            break;
+                ok = execute_land();
+                break;
+        }
+
+        if (!ok) {
+            if (_state.load() != ExecState::EmergencyStopped) {
+                set_state(ExecState::Error);
+            }
+            continue;
+        }
+
+        if (_telemetry.in_air()) {
+            set_state(ExecState::Hovering);
+        } else {
+            set_state(ExecState::Idle);
         }
     }
 }
@@ -361,6 +423,7 @@ bool FlightController::execute_hover(double seconds)
     if (!wait_until_ready_for_offboard(10s)) return false;
     if (!start_offboard_session(2s)) return false;
 
+    set_state(ExecState::Hovering);
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
 
     const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
@@ -369,11 +432,12 @@ bool FlightController::execute_hover(double seconds)
             set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
             return false;
         }
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(kStreamPeriod);
     }
 
     return true;
 }
+
 bool FlightController::execute_fly_forward(double seconds, double velocity_m_s)
 {
     if (!ensure_armed(10s)) return false;
@@ -381,6 +445,7 @@ bool FlightController::execute_fly_forward(double seconds, double velocity_m_s)
     if (!wait_until_ready_for_offboard(10s)) return false;
     if (!start_offboard_session(2s)) return false;
 
+    set_state(ExecState::ExecutingCommand);
     set_cmd(static_cast<float>(velocity_m_s), 0.0f, 0.0f, 0.0f);
 
     const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
@@ -389,12 +454,14 @@ bool FlightController::execute_fly_forward(double seconds, double velocity_m_s)
             set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
             return false;
         }
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(kStreamPeriod);
     }
 
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    set_state(ExecState::Hovering);
     return true;
 }
+
 bool FlightController::execute_turn_yaw(double degrees, double seconds)
 {
     if (!ensure_armed(10s)) return false;
@@ -402,6 +469,7 @@ bool FlightController::execute_turn_yaw(double degrees, double seconds)
     if (!wait_until_ready_for_offboard(10s)) return false;
     if (!start_offboard_session(2s)) return false;
 
+    set_state(ExecState::ExecutingCommand);
     const float yaw_rate = static_cast<float>(degrees / seconds);
     set_cmd(0.0f, 0.0f, 0.0f, yaw_rate);
 
@@ -411,9 +479,40 @@ bool FlightController::execute_turn_yaw(double degrees, double seconds)
             set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
             return false;
         }
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(kStreamPeriod);
     }
 
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    set_state(ExecState::Hovering);
+    return true;
+}
+
+bool FlightController::execute_land()
+{
+    set_state(ExecState::Landing);
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    stop_offboard_session_best_effort();
+
+    const auto result = _action.land();
+    if (result != mavsdk::Action::Result::Success) {
+        set_error(std::string("Land failed: ") + action_result_to_string(result));
+        return false;
+    }
+
+    const auto start = std::chrono::steady_clock::now();
+    while (_telemetry.in_air()) {
+        if (_interrupt_current.load()) {
+            return false;
+        }
+
+        if (std::chrono::steady_clock::now() - start > 20s) {
+            set_error("Landing timeout: telemetry.in_air() stayed true");
+            return false;
+        }
+
+        std::this_thread::sleep_for(200ms);
+    }
+
+    set_state(ExecState::Idle);
     return true;
 }

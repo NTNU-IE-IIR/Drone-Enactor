@@ -25,6 +25,7 @@ namespace drone {
 static const char* DroneControl_method_names[] = {
   "/drone.DroneControl/Enqueue",
   "/drone.DroneControl/StopNow",
+  "/drone.DroneControl/GetStatus",
 };
 
 std::unique_ptr< DroneControl::Stub> DroneControl::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -36,6 +37,7 @@ std::unique_ptr< DroneControl::Stub> DroneControl::NewStub(const std::shared_ptr
 DroneControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
   : channel_(channel), rpcmethod_Enqueue_(DroneControl_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_StopNow_(DroneControl_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_GetStatus_(DroneControl_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status DroneControl::Stub::Enqueue(::grpc::ClientContext* context, const ::drone::Command& request, ::drone::CommandAck* response) {
@@ -84,6 +86,29 @@ void DroneControl::Stub::async::StopNow(::grpc::ClientContext* context, const ::
   return result;
 }
 
+::grpc::Status DroneControl::Stub::GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::drone::StatusReply* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::google::protobuf::Empty, ::drone::StatusReply, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetStatus_, context, request, response);
+}
+
+void DroneControl::Stub::async::GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::google::protobuf::Empty, ::drone::StatusReply, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetStatus_, context, request, response, std::move(f));
+}
+
+void DroneControl::Stub::async::GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetStatus_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::drone::StatusReply>* DroneControl::Stub::PrepareAsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::drone::StatusReply, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetStatus_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::drone::StatusReply>* DroneControl::Stub::AsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncGetStatusRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 DroneControl::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       DroneControl_method_names[0],
@@ -105,6 +130,16 @@ DroneControl::Service::Service() {
              ::drone::StopReply* resp) {
                return service->StopNow(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      DroneControl_method_names[2],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< DroneControl::Service, ::google::protobuf::Empty, ::drone::StatusReply, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](DroneControl::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::drone::StatusReply* resp) {
+               return service->GetStatus(ctx, req, resp);
+             }, this)));
 }
 
 DroneControl::Service::~Service() {
@@ -118,6 +153,13 @@ DroneControl::Service::~Service() {
 }
 
 ::grpc::Status DroneControl::Service::StopNow(::grpc::ServerContext* context, const ::drone::StopRequest* request, ::drone::StopReply* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status DroneControl::Service::GetStatus(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response) {
   (void) context;
   (void) request;
   (void) response;

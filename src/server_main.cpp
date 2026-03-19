@@ -39,7 +39,7 @@ int main()
         }
     };
 
-    const std::string conn = "udpin://0.0.0.0:14550";
+    const std::string conn = "udpin://0.0.0.0:14540";
 
     auto result = mavsdk.add_any_connection(conn);
     if (result != mavsdk::ConnectionResult::Success) {

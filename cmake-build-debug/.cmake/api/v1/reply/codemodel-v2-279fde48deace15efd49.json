@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "BachelorProsjektAPI",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "drone_api_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-drone_api_server-Debug-47176fb4219df7b635e9.json",
+					"name" : "drone_api_server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "drone_client_demo::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-drone_client_demo-Debug-406a38b30bdff73c49b2.json",
+					"name" : "drone_client_demo",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "drone_proto::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-drone_proto-Debug-cc781839eef1544af70f.json",
+					"name" : "drone_proto",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "planner_cli::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-planner_cli-Debug-f0a51430832e99b38a15.json",
+					"name" : "planner_cli",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug",
+		"source" : "/Users/49kotosk/CLionProjects/BachelorProsjektAPI"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

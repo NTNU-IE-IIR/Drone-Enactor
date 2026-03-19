@@ -1,6 +1,7 @@
 #pragma once
 
 #include <grpcpp/grpcpp.h>
+
 #include "drone_control.grpc.pb.h"
 #include "flight_controller.h"
 
@@ -16,6 +17,12 @@ public:
                          const drone::StopRequest* req,
                          drone::StopReply* reply) override;
 
+    grpc::Status GetStatus(grpc::ServerContext*,
+                           const google::protobuf::Empty* req,
+                           drone::StatusReply* reply) override;
+
 private:
+    static drone::ExecState to_proto_state(FlightController::ExecState state);
+
     FlightController& _controller;
 };
