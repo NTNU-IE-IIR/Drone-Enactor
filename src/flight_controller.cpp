@@ -2,6 +2,7 @@
 #include "flight_helpers.h"
 
 #include <iostream>
+#include <vector>
 
 using namespace std::chrono_literals;
 
@@ -64,6 +65,29 @@ std::string FlightController::last_error() const
 {
     std::lock_guard<std::mutex> lock(_err_mutex);
     return _last_error;
+}
+
+void FlightController::set_command_status(const std::string& id,
+                                          CommandState state,
+                                          std::string message)
+{
+    std::lock_guard<std::mutex> lock(_command_status_mutex);
+    _command_status[id] = CommandStatusSnapshot{
+        true,
+        state,
+        std::move(message)
+    };
+}
+
+FlightController::CommandStatusSnapshot
+FlightController::get_command_status(const std::string& id) const
+{
+    std::lock_guard<std::mutex> lock(_command_status_mutex);
+    auto it = _command_status.find(id);
+    if (it == _command_status.end()) {
+        return {};
+    }
+    return it->second;
 }
 
 FlightController::ExecState FlightController::current_state() const
@@ -261,61 +285,69 @@ void FlightController::stop_offboard_session_best_effort()
     _offboard_running.store(false);
 }
 
-bool FlightController::enqueue_hover(double seconds)
+bool FlightController::enqueue_hover(const std::string& id, double seconds)
 {
     if (seconds <= 0.0) {
         set_error("Hover seconds must be > 0");
+        set_command_status(id, CommandState::Failed, last_error());
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({QueuedCommand::Type::Hover, seconds, 0.0});
+        _command_queue.push_back({id, QueuedCommand::Type::Hover, seconds, 0.0});
     }
+    set_command_status(id, CommandState::Queued, "Queued");
     _queue_cv.notify_one();
     return true;
 }
 
-bool FlightController::enqueue_fly_forward(double seconds, double velocity_m_s)
+bool FlightController::enqueue_fly_forward(const std::string& id, double seconds, double velocity_m_s)
 {
     if (seconds <= 0.0) {
         set_error("Fly seconds must be > 0");
+        set_command_status(id, CommandState::Failed, last_error());
         return false;
     }
     if (velocity_m_s == 0.0) {
         set_error("Velocity must be non-zero");
+        set_command_status(id, CommandState::Failed, last_error());
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({QueuedCommand::Type::FlyForward, seconds, velocity_m_s});
+        _command_queue.push_back({id, QueuedCommand::Type::FlyForward, seconds, velocity_m_s});
     }
+    set_command_status(id, CommandState::Queued, "Queued");
     _queue_cv.notify_one();
     return true;
 }
 
-bool FlightController::enqueue_turn_yaw(double degrees, double seconds)
+bool FlightController::enqueue_turn_yaw(const std::string& id, double degrees, double seconds)
 {
     if (seconds <= 0.0) {
         set_error("Turn seconds must be > 0");
+        set_command_status(id, CommandState::Failed, last_error());
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({QueuedCommand::Type::TurnYaw, degrees, seconds});
+        _command_queue.push_back({id, QueuedCommand::Type::TurnYaw, degrees, seconds});
     }
+    set_command_status(id, CommandState::Queued, "Queued");
     _queue_cv.notify_one();
     return true;
 }
 
-bool FlightController::enqueue_land()
+bool FlightController::enqueue_land(const std::string& id)
 {
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({QueuedCommand::Type::Land, 0.0, 0.0});
+        _command_queue.push_back({id, QueuedCommand::Type::Land, 0.0, 0.0});
     }
+    set_command_status(id, CommandState::Queued, "Queued");
     _queue_cv.notify_one();
     return true;
 }
@@ -325,9 +357,17 @@ bool FlightController::request_stop()
     set_state(ExecState::EmergencyStopped);
     _interrupt_current.store(true);
 
+    std::vector<std::string> cancelled_ids;
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
+        for (const auto& cmd : _command_queue) {
+            cancelled_ids.push_back(cmd.id);
+        }
         _command_queue.clear();
+    }
+
+    for (const auto& id : cancelled_ids) {
+        set_command_status(id, CommandState::Cancelled, "Cancelled by StopNow");
     }
 
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
@@ -384,6 +424,7 @@ void FlightController::worker_loop()
 
         _interrupt_current.store(false);
         clear_error();
+        set_command_status(cmd.id, CommandState::Running, "Running");
 
         bool ok = false;
         switch (cmd.type) {
@@ -402,11 +443,19 @@ void FlightController::worker_loop()
         }
 
         if (!ok) {
+            if (_interrupt_current.load()) {
+                set_command_status(cmd.id, CommandState::Interrupted, "Interrupted");
+            } else {
+                set_command_status(cmd.id, CommandState::Failed, last_error());
+            }
+
             if (_state.load() != ExecState::EmergencyStopped) {
                 set_state(ExecState::Error);
             }
             continue;
         }
+
+        set_command_status(cmd.id, CommandState::Succeeded, "Succeeded");
 
         if (_telemetry.in_air()) {
             set_state(ExecState::Hovering);

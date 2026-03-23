@@ -21,8 +21,13 @@ public:
                            const google::protobuf::Empty* req,
                            drone::StatusReply* reply) override;
 
+    grpc::Status GetCommandStatus(grpc::ServerContext*,
+                                  const drone::CommandStatusRequest* req,
+                                  drone::CommandStatusReply* reply) override;
+
 private:
     static drone::ExecState to_proto_state(FlightController::ExecState state);
+    static drone::CommandState to_proto_command_state(FlightController::CommandState state);
 
     FlightController& _controller;
 };

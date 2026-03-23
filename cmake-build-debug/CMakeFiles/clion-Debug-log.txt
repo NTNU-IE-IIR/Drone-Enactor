@@ -13,6 +13,6 @@
 -- Found c-ares: /opt/homebrew/lib/cmake/c-ares/c-ares-config.cmake (found version "1.34.6")
 -- Found RE2 via CMake.
 -- MAVSDK include dirs: /opt/homebrew/include;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk;/opt/homebrew/include/mavsdk
--- Configuring done (1.0s)
+-- Configuring done (0.7s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug

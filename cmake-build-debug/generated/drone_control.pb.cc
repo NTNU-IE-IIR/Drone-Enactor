@@ -218,6 +218,68 @@ struct FlyForwardDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 FlyForwardDefaultTypeInternal _FlyForward_default_instance_;
 
+inline constexpr CommandStatusRequest::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        id_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()) {}
+
+template <typename>
+constexpr CommandStatusRequest::CommandStatusRequest(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CommandStatusRequest_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
+}
+struct CommandStatusRequestDefaultTypeInternal {
+  constexpr CommandStatusRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CommandStatusRequestDefaultTypeInternal() {}
+  union {
+    CommandStatusRequest _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandStatusRequestDefaultTypeInternal _CommandStatusRequest_default_instance_;
+
+inline constexpr CommandStatusReply::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        id_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        found_{false},
+        command_state_{static_cast< ::drone::CommandState >(0)},
+        controller_state_{static_cast< ::drone::ExecState >(0)} {}
+
+template <typename>
+constexpr CommandStatusReply::CommandStatusReply(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CommandStatusReply_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
+}
+struct CommandStatusReplyDefaultTypeInternal {
+  constexpr CommandStatusReplyDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CommandStatusReplyDefaultTypeInternal() {}
+  union {
+    CommandStatusReply _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandStatusReplyDefaultTypeInternal _CommandStatusReply_default_instance_;
+
 inline constexpr CommandAck::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     ::_pbi::ConstantInitialized) noexcept
@@ -229,7 +291,8 @@ inline constexpr CommandAck::Impl_::Impl_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         accepted_{false},
-        state_{static_cast< ::drone::ExecState >(0)} {}
+        state_{static_cast< ::drone::ExecState >(0)},
+        command_state_{static_cast< ::drone::CommandState >(0)} {}
 
 template <typename>
 constexpr CommandAck::CommandAck(::_pbi::ConstantInitialized)
@@ -282,7 +345,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandDefaultTypeInternal _Command_default_instance_;
 }  // namespace drone
 static const ::_pb::EnumDescriptor* PROTOBUF_NONNULL
-    file_level_enum_descriptors_drone_5fcontrol_2eproto[1];
+    file_level_enum_descriptors_drone_5fcontrol_2eproto[2];
 static constexpr const ::_pb::ServiceDescriptor* PROTOBUF_NONNULL* PROTOBUF_NULLABLE
     file_level_service_descriptors_drone_5fcontrol_2eproto = nullptr;
 const ::uint32_t
@@ -329,15 +392,17 @@ const ::uint32_t
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_._has_bits_),
-        7, // hasbit index offset
+        8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_.accepted_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_.message_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_.state_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandAck, _impl_.command_state_),
         0,
         2,
         1,
         3,
+        4,
         0x000, // bitmap
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::StopReply, _impl_._has_bits_),
@@ -367,6 +432,24 @@ const ::uint32_t
         5,
         6,
         7,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusRequest, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusRequest, _impl_.id_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.found_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.command_state_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.message_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.controller_state_),
+        0,
+        2,
+        3,
+        1,
+        4,
 };
 
 static const ::_pbi::MigrationSchema
@@ -377,9 +460,11 @@ static const ::_pbi::MigrationSchema
         {27, sizeof(::drone::TurnYaw)},
         {34, sizeof(::drone::Land)},
         {39, sizeof(::drone::CommandAck)},
-        {50, sizeof(::drone::StopRequest)},
-        {51, sizeof(::drone::StopReply)},
-        {60, sizeof(::drone::StatusReply)},
+        {52, sizeof(::drone::StopRequest)},
+        {53, sizeof(::drone::StopReply)},
+        {62, sizeof(::drone::StatusReply)},
+        {81, sizeof(::drone::CommandStatusRequest)},
+        {86, sizeof(::drone::CommandStatusReply)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::drone::_Command_default_instance_._instance,
@@ -391,6 +476,8 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::drone::_StopRequest_default_instance_._instance,
     &::drone::_StopReply_default_instance_._instance,
     &::drone::_StatusReply_default_instance_._instance,
+    &::drone::_CommandStatusRequest_default_instance_._instance,
+    &::drone::_CommandStatusReply_default_instance_._instance,
 };
 const char descriptor_table_protodef_drone_5fcontrol_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
@@ -403,24 +490,37 @@ const char descriptor_table_protodef_drone_5fcontrol_2eproto[] ABSL_ATTRIBUTE_SE
     "\007seconds\030\001 \001(\001\"/\n\nFlyForward\022\017\n\007seconds\030"
     "\001 \001(\001\022\020\n\010velocity\030\002 \001(\001\"\'\n\007TurnYaw\022\013\n\003de"
     "g\030\001 \001(\001\022\017\n\007seconds\030\002 \001(\001\"\027\n\004Land\022\017\n\007mess"
-    "age\030\001 \001(\t\"\\\n\nCommandAck\022\n\n\002id\030\001 \001(\t\022\020\n\010a"
-    "ccepted\030\002 \001(\010\022\017\n\007message\030\003 \001(\t\022\037\n\005state\030"
-    "\004 \001(\0162\020.drone.ExecState\"\r\n\013StopRequest\"I"
-    "\n\tStopReply\022\n\n\002ok\030\001 \001(\010\022\017\n\007message\030\002 \001(\t"
-    "\022\037\n\005state\030\003 \001(\0162\020.drone.ExecState\"\272\001\n\013St"
-    "atusReply\022\037\n\005state\030\001 \001(\0162\020.drone.ExecSta"
-    "te\022\022\n\nlast_error\030\002 \001(\t\022\021\n\tconnected\030\003 \001("
-    "\010\022\r\n\005armed\030\004 \001(\010\022\016\n\006in_air\030\005 \001(\010\022\033\n\023rela"
-    "tive_altitude_m\030\006 \001(\002\022\023\n\013flight_mode\030\007 \001"
-    "(\005\022\022\n\nqueue_size\030\010 \001(\r*\224\001\n\tExecState\022\020\n\014"
-    "DISCONNECTED\020\000\022\010\n\004IDLE\020\001\022\n\n\006ARMING\020\002\022\r\n\t"
-    "TAKINGOFF\020\003\022\014\n\010HOVERING\020\004\022\024\n\020EXECUTINGCO"
-    "MMAND\020\005\022\013\n\007LANDING\020\006\022\024\n\020EMERGENCYSTOPPED"
-    "\020\007\022\t\n\005ERROR\020\0102\246\001\n\014DroneControl\022,\n\007Enqueu"
-    "e\022\016.drone.Command\032\021.drone.CommandAck\022/\n\007"
-    "StopNow\022\022.drone.StopRequest\032\020.drone.Stop"
-    "Reply\0227\n\tGetStatus\022\026.google.protobuf.Emp"
-    "ty\032\022.drone.StatusReplyb\006proto3"
+    "age\030\001 \001(\t\"\210\001\n\nCommandAck\022\n\n\002id\030\001 \001(\t\022\020\n\010"
+    "accepted\030\002 \001(\010\022\017\n\007message\030\003 \001(\t\022\037\n\005state"
+    "\030\004 \001(\0162\020.drone.ExecState\022*\n\rcommand_stat"
+    "e\030\005 \001(\0162\023.drone.CommandState\"\r\n\013StopRequ"
+    "est\"I\n\tStopReply\022\n\n\002ok\030\001 \001(\010\022\017\n\007message\030"
+    "\002 \001(\t\022\037\n\005state\030\003 \001(\0162\020.drone.ExecState\"\272"
+    "\001\n\013StatusReply\022\037\n\005state\030\001 \001(\0162\020.drone.Ex"
+    "ecState\022\022\n\nlast_error\030\002 \001(\t\022\021\n\tconnected"
+    "\030\003 \001(\010\022\r\n\005armed\030\004 \001(\010\022\016\n\006in_air\030\005 \001(\010\022\033\n"
+    "\023relative_altitude_m\030\006 \001(\002\022\023\n\013flight_mod"
+    "e\030\007 \001(\005\022\022\n\nqueue_size\030\010 \001(\r\"\"\n\024CommandSt"
+    "atusRequest\022\n\n\002id\030\001 \001(\t\"\230\001\n\022CommandStatu"
+    "sReply\022\n\n\002id\030\001 \001(\t\022\r\n\005found\030\002 \001(\010\022*\n\rcom"
+    "mand_state\030\003 \001(\0162\023.drone.CommandState\022\017\n"
+    "\007message\030\004 \001(\t\022*\n\020controller_state\030\005 \001(\016"
+    "2\020.drone.ExecState*\224\001\n\tExecState\022\020\n\014DISC"
+    "ONNECTED\020\000\022\010\n\004IDLE\020\001\022\n\n\006ARMING\020\002\022\r\n\tTAKI"
+    "NGOFF\020\003\022\014\n\010HOVERING\020\004\022\024\n\020EXECUTINGCOMMAN"
+    "D\020\005\022\013\n\007LANDING\020\006\022\024\n\020EMERGENCYSTOPPED\020\007\022\t"
+    "\n\005ERROR\020\010*\321\001\n\014CommandState\022\031\n\025COMMAND_ST"
+    "ATE_UNKNOWN\020\000\022\030\n\024COMMAND_STATE_QUEUED\020\001\022"
+    "\031\n\025COMMAND_STATE_RUNNING\020\002\022\033\n\027COMMAND_ST"
+    "ATE_SUCCEEDED\020\003\022\030\n\024COMMAND_STATE_FAILED\020"
+    "\004\022\035\n\031COMMAND_STATE_INTERRUPTED\020\005\022\033\n\027COMM"
+    "AND_STATE_CANCELLED\020\0062\362\001\n\014DroneControl\022,"
+    "\n\007Enqueue\022\016.drone.Command\032\021.drone.Comman"
+    "dAck\022/\n\007StopNow\022\022.drone.StopRequest\032\020.dr"
+    "one.StopReply\0227\n\tGetStatus\022\026.google.prot"
+    "obuf.Empty\032\022.drone.StatusReply\022J\n\020GetCom"
+    "mandStatus\022\033.drone.CommandStatusRequest\032"
+    "\031.drone.CommandStatusReplyb\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_drone_5fcontrol_2eproto_deps[1] = {
@@ -430,13 +530,13 @@ static ::absl::once_flag descriptor_table_drone_5fcontrol_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_drone_5fcontrol_2eproto = {
     false,
     false,
-    1070,
+    1594,
     descriptor_table_protodef_drone_5fcontrol_2eproto,
     "drone_control.proto",
     &descriptor_table_drone_5fcontrol_2eproto_once,
     descriptor_table_drone_5fcontrol_2eproto_deps,
     1,
-    9,
+    11,
     schemas,
     file_default_instances,
     TableStruct_drone_5fcontrol_2eproto::offsets,
@@ -451,6 +551,13 @@ ExecState_descriptor() {
 }
 PROTOBUF_CONSTINIT const uint32_t ExecState_internal_data_[] = {
     589824u, 0u, };
+[[nodiscard]] const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL
+CommandState_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_drone_5fcontrol_2eproto);
+  return file_level_enum_descriptors_drone_5fcontrol_2eproto[1];
+}
+PROTOBUF_CONSTINIT const uint32_t CommandState_internal_data_[] = {
+    458752u, 0u, };
 // ===================================================================
 
 class Command::_Internal {
@@ -2113,9 +2220,9 @@ CommandAck::CommandAck(
                offsetof(Impl_, accepted_),
            reinterpret_cast<const char*>(&from._impl_) +
                offsetof(Impl_, accepted_),
-           offsetof(Impl_, state_) -
+           offsetof(Impl_, command_state_) -
                offsetof(Impl_, accepted_) +
-               sizeof(Impl_::state_));
+               sizeof(Impl_::command_state_));
 
   // @@protoc_insertion_point(copy_constructor:drone.CommandAck)
 }
@@ -2131,9 +2238,9 @@ inline void CommandAck::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, accepted_),
            0,
-           offsetof(Impl_, state_) -
+           offsetof(Impl_, command_state_) -
                offsetof(Impl_, accepted_) +
-               sizeof(Impl_::state_));
+               sizeof(Impl_::command_state_));
 }
 CommandAck::~CommandAck() {
   // @@protoc_insertion_point(destructor:drone.CommandAck)
@@ -2193,16 +2300,16 @@ CommandAck::GetClassData() const {
   return CommandAck_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 4, 0, 34, 2>
+const ::_pbi::TcParseTable<3, 5, 0, 34, 2>
 CommandAck::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CommandAck, _impl_._has_bits_),
     0, // no _extensions_
-    4, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
+    5,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     CommandAck_class_data_.base(),
@@ -2212,10 +2319,7 @@ CommandAck::_table_ = {
     ::_pbi::TcParser::GetTable<::drone::CommandAck>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .drone.ExecState state = 4;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandAck, _impl_.state_), 3>(),
-     {32, 3, 0,
-      PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.state_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     // string id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
@@ -2228,6 +2332,16 @@ CommandAck::_table_ = {
     {::_pbi::TcParser::FastUS1,
      {26, 1, 0,
       PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.message_)}},
+    // .drone.ExecState state = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandAck, _impl_.state_), 3>(),
+     {32, 3, 0,
+      PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.state_)}},
+    // .drone.CommandState command_state = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandAck, _impl_.command_state_), 4>(),
+     {40, 4, 0,
+      PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.command_state_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
@@ -2239,6 +2353,8 @@ CommandAck::_table_ = {
     {PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.message_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .drone.ExecState state = 4;
     {PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.state_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // .drone.CommandState command_state = 5;
+    {PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.command_state_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
   {{
@@ -2264,10 +2380,10 @@ PROTOBUF_NOINLINE void CommandAck::Clear() {
       _impl_.message_.ClearNonDefaultToEmpty();
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000cU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001cU)) {
     ::memset(&_impl_.accepted_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.state_) -
-        reinterpret_cast<char*>(&_impl_.accepted_)) + sizeof(_impl_.state_));
+        reinterpret_cast<char*>(&_impl_.command_state_) -
+        reinterpret_cast<char*>(&_impl_.accepted_)) + sizeof(_impl_.command_state_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -2330,6 +2446,15 @@ PROTOBUF_NOINLINE void CommandAck::Clear() {
     }
   }
 
+  // .drone.CommandState command_state = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (this_._internal_command_state() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          5, this_._internal_command_state(), target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -2355,7 +2480,7 @@ PROTOBUF_NOINLINE void CommandAck::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     // string id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_id().empty()) {
@@ -2383,6 +2508,13 @@ PROTOBUF_NOINLINE void CommandAck::Clear() {
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_state());
       }
     }
+    // .drone.CommandState command_state = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (this_._internal_command_state() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_command_state());
+      }
+    }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
                                              &this_._impl_._cached_size_);
@@ -2402,7 +2534,7 @@ void CommandAck::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!from._internal_id().empty()) {
         _this->_internal_set_id(from._internal_id());
@@ -2431,6 +2563,11 @@ void CommandAck::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.state_ = from._impl_.state_;
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (from._internal_command_state() != 0) {
+        _this->_impl_.command_state_ = from._impl_.command_state_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -2454,8 +2591,8 @@ void CommandAck::InternalSwap(CommandAck* PROTOBUF_RESTRICT PROTOBUF_NONNULL oth
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.id_, &other->_impl_.id_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.message_, &other->_impl_.message_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.state_)
-      + sizeof(CommandAck::_impl_.state_)
+      PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.command_state_)
+      + sizeof(CommandAck::_impl_.command_state_)
       - PROTOBUF_FIELD_OFFSET(CommandAck, _impl_.accepted_)>(
           reinterpret_cast<char*>(&_impl_.accepted_),
           reinterpret_cast<char*>(&other->_impl_.accepted_));
@@ -3412,6 +3549,706 @@ void StatusReply::InternalSwap(StatusReply* PROTOBUF_RESTRICT PROTOBUF_NONNULL o
 }
 
 ::google::protobuf::Metadata StatusReply::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CommandStatusRequest::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CommandStatusRequest>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CommandStatusRequest, _impl_._has_bits_);
+};
+
+CommandStatusRequest::CommandStatusRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CommandStatusRequest_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.CommandStatusRequest)
+}
+PROTOBUF_NDEBUG_INLINE CommandStatusRequest::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::drone::CommandStatusRequest& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        id_(arena, from.id_) {}
+
+CommandStatusRequest::CommandStatusRequest(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CommandStatusRequest& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CommandStatusRequest_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CommandStatusRequest* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:drone.CommandStatusRequest)
+}
+PROTOBUF_NDEBUG_INLINE CommandStatusRequest::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        id_(arena) {}
+
+inline void CommandStatusRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+CommandStatusRequest::~CommandStatusRequest() {
+  // @@protoc_insertion_point(destructor:drone.CommandStatusRequest)
+  SharedDtor(*this);
+}
+inline void CommandStatusRequest::SharedDtor(MessageLite& self) {
+  CommandStatusRequest& this_ = static_cast<CommandStatusRequest&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.id_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CommandStatusRequest::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CommandStatusRequest(arena);
+}
+constexpr auto CommandStatusRequest::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CommandStatusRequest),
+                                            alignof(CommandStatusRequest));
+}
+constexpr auto CommandStatusRequest::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CommandStatusRequest_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // IsInitialized
+          &CommandStatusRequest::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CommandStatusRequest>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CommandStatusRequest::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CommandStatusRequest>(), &CommandStatusRequest::ByteSizeLong,
+              &CommandStatusRequest::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CommandStatusRequest, _impl_._cached_size_),
+          false,
+      },
+      &CommandStatusRequest::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CommandStatusRequest_class_data_ =
+        CommandStatusRequest::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CommandStatusRequest::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CommandStatusRequest_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CommandStatusRequest_class_data_.tc_table);
+  return CommandStatusRequest_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 37, 2>
+CommandStatusRequest::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CommandStatusRequest, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    CommandStatusRequest_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::CommandStatusRequest>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string id = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusRequest, _impl_.id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string id = 1;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusRequest, _impl_.id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\32\2\0\0\0\0\0\0"
+    "drone.CommandStatusRequest"
+    "id"
+  }},
+};
+PROTOBUF_NOINLINE void CommandStatusRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.CommandStatusRequest)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    _impl_.id_.ClearNonDefaultToEmpty();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CommandStatusRequest::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CommandStatusRequest& this_ = static_cast<const CommandStatusRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CommandStatusRequest::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CommandStatusRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.CommandStatusRequest)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string id = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_id().empty()) {
+      const ::std::string& _s = this_._internal_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "drone.CommandStatusRequest.id");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.CommandStatusRequest)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CommandStatusRequest::ByteSizeLong(const MessageLite& base) {
+  const CommandStatusRequest& this_ = static_cast<const CommandStatusRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CommandStatusRequest::ByteSizeLong() const {
+  const CommandStatusRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.CommandStatusRequest)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // string id = 1;
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_id());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CommandStatusRequest::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CommandStatusRequest*>(&to_msg);
+  auto& from = static_cast<const CommandStatusRequest&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.CommandStatusRequest)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!from._internal_id().empty()) {
+      _this->_internal_set_id(from._internal_id());
+    } else {
+      if (_this->_impl_.id_.IsDefault()) {
+        _this->_internal_set_id("");
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CommandStatusRequest::CopyFrom(const CommandStatusRequest& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.CommandStatusRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CommandStatusRequest::InternalSwap(CommandStatusRequest* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.id_, &other->_impl_.id_, arena);
+}
+
+::google::protobuf::Metadata CommandStatusRequest::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CommandStatusReply::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CommandStatusReply>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_._has_bits_);
+};
+
+CommandStatusReply::CommandStatusReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CommandStatusReply_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:drone.CommandStatusReply)
+}
+PROTOBUF_NDEBUG_INLINE CommandStatusReply::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::drone::CommandStatusReply& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        id_(arena, from.id_),
+        message_(arena, from.message_) {}
+
+CommandStatusReply::CommandStatusReply(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CommandStatusReply& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CommandStatusReply_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CommandStatusReply* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, found_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, found_),
+           offsetof(Impl_, controller_state_) -
+               offsetof(Impl_, found_) +
+               sizeof(Impl_::controller_state_));
+
+  // @@protoc_insertion_point(copy_constructor:drone.CommandStatusReply)
+}
+PROTOBUF_NDEBUG_INLINE CommandStatusReply::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        id_(arena),
+        message_(arena) {}
+
+inline void CommandStatusReply::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, found_),
+           0,
+           offsetof(Impl_, controller_state_) -
+               offsetof(Impl_, found_) +
+               sizeof(Impl_::controller_state_));
+}
+CommandStatusReply::~CommandStatusReply() {
+  // @@protoc_insertion_point(destructor:drone.CommandStatusReply)
+  SharedDtor(*this);
+}
+inline void CommandStatusReply::SharedDtor(MessageLite& self) {
+  CommandStatusReply& this_ = static_cast<CommandStatusReply&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.id_.Destroy();
+  this_._impl_.message_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CommandStatusReply::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CommandStatusReply(arena);
+}
+constexpr auto CommandStatusReply::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CommandStatusReply),
+                                            alignof(CommandStatusReply));
+}
+constexpr auto CommandStatusReply::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CommandStatusReply_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // IsInitialized
+          &CommandStatusReply::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CommandStatusReply>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CommandStatusReply::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CommandStatusReply>(), &CommandStatusReply::ByteSizeLong,
+              &CommandStatusReply::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_._cached_size_),
+          false,
+      },
+      &CommandStatusReply::kDescriptorMethods,
+      &descriptor_table_drone_5fcontrol_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CommandStatusReply_class_data_ =
+        CommandStatusReply::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CommandStatusReply::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CommandStatusReply_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CommandStatusReply_class_data_.tc_table);
+  return CommandStatusReply_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 0, 42, 2>
+CommandStatusReply::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    CommandStatusReply_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::drone::CommandStatusReply>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // string id = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.id_)}},
+    // bool found = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(CommandStatusReply, _impl_.found_), 2>(),
+     {16, 2, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.found_)}},
+    // .drone.CommandState command_state = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandStatusReply, _impl_.command_state_), 3>(),
+     {24, 3, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.command_state_)}},
+    // string message = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 1, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.message_)}},
+    // .drone.ExecState controller_state = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandStatusReply, _impl_.controller_state_), 4>(),
+     {40, 4, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string id = 1;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // bool found = 2;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.found_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // .drone.CommandState command_state = 3;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.command_state_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // string message = 4;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.message_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .drone.ExecState controller_state = 5;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+  }},
+  // no aux_entries
+  {{
+    "\30\2\0\0\7\0\0\0"
+    "drone.CommandStatusReply"
+    "id"
+    "message"
+  }},
+};
+PROTOBUF_NOINLINE void CommandStatusReply::Clear() {
+// @@protoc_insertion_point(message_clear_start:drone.CommandStatusReply)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.id_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _impl_.message_.ClearNonDefaultToEmpty();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001cU)) {
+    ::memset(&_impl_.found_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.controller_state_) -
+        reinterpret_cast<char*>(&_impl_.found_)) + sizeof(_impl_.controller_state_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CommandStatusReply::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CommandStatusReply& this_ = static_cast<const CommandStatusReply&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CommandStatusReply::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CommandStatusReply& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:drone.CommandStatusReply)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string id = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_id().empty()) {
+      const ::std::string& _s = this_._internal_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "drone.CommandStatusReply.id");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  // bool found = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (this_._internal_found() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteBoolToArray(
+          2, this_._internal_found(), target);
+    }
+  }
+
+  // .drone.CommandState command_state = 3;
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (this_._internal_command_state() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          3, this_._internal_command_state(), target);
+    }
+  }
+
+  // string message = 4;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (!this_._internal_message().empty()) {
+      const ::std::string& _s = this_._internal_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "drone.CommandStatusReply.message");
+      target = stream->WriteStringMaybeAliased(4, _s, target);
+    }
+  }
+
+  // .drone.ExecState controller_state = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (this_._internal_controller_state() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          5, this_._internal_controller_state(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:drone.CommandStatusReply)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CommandStatusReply::ByteSizeLong(const MessageLite& base) {
+  const CommandStatusReply& this_ = static_cast<const CommandStatusReply&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CommandStatusReply::ByteSizeLong() const {
+  const CommandStatusReply& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:drone.CommandStatusReply)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // string id = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_id());
+      }
+    }
+    // string message = 4;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (!this_._internal_message().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_message());
+      }
+    }
+    // bool found = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (this_._internal_found() != 0) {
+        total_size += 2;
+      }
+    }
+    // .drone.CommandState command_state = 3;
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (this_._internal_command_state() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_command_state());
+      }
+    }
+    // .drone.ExecState controller_state = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (this_._internal_controller_state() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_controller_state());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CommandStatusReply::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CommandStatusReply*>(&to_msg);
+  auto& from = static_cast<const CommandStatusReply&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:drone.CommandStatusReply)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_id().empty()) {
+        _this->_internal_set_id(from._internal_id());
+      } else {
+        if (_this->_impl_.id_.IsDefault()) {
+          _this->_internal_set_id("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (!from._internal_message().empty()) {
+        _this->_internal_set_message(from._internal_message());
+      } else {
+        if (_this->_impl_.message_.IsDefault()) {
+          _this->_internal_set_message("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (from._internal_found() != 0) {
+        _this->_impl_.found_ = from._impl_.found_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (from._internal_command_state() != 0) {
+        _this->_impl_.command_state_ = from._impl_.command_state_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (from._internal_controller_state() != 0) {
+        _this->_impl_.controller_state_ = from._impl_.controller_state_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CommandStatusReply::CopyFrom(const CommandStatusReply& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:drone.CommandStatusReply)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CommandStatusReply::InternalSwap(CommandStatusReply* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.id_, &other->_impl_.id_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.message_, &other->_impl_.message_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_)
+      + sizeof(CommandStatusReply::_impl_.controller_state_)
+      - PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.found_)>(
+          reinterpret_cast<char*>(&_impl_.found_),
+          reinterpret_cast<char*>(&other->_impl_.found_));
+}
+
+::google::protobuf::Metadata CommandStatusReply::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // @@protoc_insertion_point(namespace_scope)

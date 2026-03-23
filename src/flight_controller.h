@@ -9,6 +9,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <unordered_map>
 
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/offboard/offboard.h>
@@ -29,6 +30,16 @@ public:
         Error
     };
 
+    enum class CommandState {
+        Unknown,
+        Queued,
+        Running,
+        Succeeded,
+        Failed,
+        Interrupted,
+        Cancelled
+    };
+
     struct StatusSnapshot {
         ExecState state{ExecState::Disconnected};
         std::string last_error{};
@@ -40,18 +51,25 @@ public:
         std::uint32_t queue_size{0};
     };
 
+    struct CommandStatusSnapshot {
+        bool found{false};
+        CommandState state{CommandState::Unknown};
+        std::string message{};
+    };
+
     explicit FlightController(std::shared_ptr<mavsdk::System> system);
     ~FlightController();
 
-    bool enqueue_hover(double seconds);
-    bool enqueue_fly_forward(double seconds, double velocity_m_s);
-    bool enqueue_turn_yaw(double degrees, double seconds);
-    bool enqueue_land();
+    bool enqueue_hover(const std::string& id, double seconds);
+    bool enqueue_fly_forward(const std::string& id, double seconds, double velocity_m_s);
+    bool enqueue_turn_yaw(const std::string& id, double degrees, double seconds);
+    bool enqueue_land(const std::string& id);
 
     bool request_stop();
 
     std::string last_error() const;
     StatusSnapshot get_status() const;
+    CommandStatusSnapshot get_command_status(const std::string& id) const;
     ExecState current_state() const;
 
 private:
@@ -63,6 +81,7 @@ private:
             Land
         };
 
+        std::string id;
         Type type;
         double a{0.0};
         double b{0.0};
@@ -71,6 +90,8 @@ private:
     void set_state(ExecState new_state);
     void set_error(std::string msg);
     void clear_error();
+
+    void set_command_status(const std::string& id, CommandState state, std::string message);
 
     void worker_loop();
     void start_worker();
@@ -119,4 +140,7 @@ private:
 
     mutable std::mutex _err_mutex;
     std::string _last_error;
+
+    mutable std::mutex _command_status_mutex;
+    std::unordered_map<std::string, CommandStatusSnapshot> _command_status;
 };

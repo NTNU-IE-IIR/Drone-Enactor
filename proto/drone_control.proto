@@ -8,6 +8,7 @@ service DroneControl {
   rpc Enqueue(Command) returns (CommandAck);
   rpc StopNow(StopRequest) returns (StopReply);
   rpc GetStatus(google.protobuf.Empty) returns (StatusReply);
+  rpc GetCommandStatus(CommandStatusRequest) returns (CommandStatusReply);
 }
 
 enum ExecState {
@@ -20,6 +21,16 @@ enum ExecState {
   LANDING = 6;
   EMERGENCYSTOPPED = 7;
   ERROR = 8;
+}
+
+enum CommandState {
+  COMMAND_STATE_UNKNOWN = 0;
+  COMMAND_STATE_QUEUED = 1;
+  COMMAND_STATE_RUNNING = 2;
+  COMMAND_STATE_SUCCEEDED = 3;
+  COMMAND_STATE_FAILED = 4;
+  COMMAND_STATE_INTERRUPTED = 5;
+  COMMAND_STATE_CANCELLED = 6;
 }
 
 message Command {
@@ -56,6 +67,7 @@ message CommandAck {
   bool accepted = 2;
   string message = 3;
   ExecState state = 4;
+  CommandState command_state = 5;
 }
 
 message StopRequest {}
@@ -75,4 +87,16 @@ message StatusReply {
   float relative_altitude_m = 6;
   int32 flight_mode = 7;
   uint32 queue_size = 8;
+}
+
+message CommandStatusRequest {
+  string id = 1;
+}
+
+message CommandStatusReply {
+  string id = 1;
+  bool found = 2;
+  CommandState command_state = 3;
+  string message = 4;
+  ExecState controller_state = 5;
 }

@@ -57,6 +57,13 @@ class DroneControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::StatusReply>> PrepareAsyncGetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::StatusReply>>(PrepareAsyncGetStatusRaw(context, request, cq));
     }
+    virtual ::grpc::Status GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::drone::CommandStatusReply* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>> AsyncGetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>>(AsyncGetCommandStatusRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>> PrepareAsyncGetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>>(PrepareAsyncGetCommandStatusRaw(context, request, cq));
+    }
     class async_interface {
      public:
       virtual ~async_interface() {}
@@ -66,6 +73,8 @@ class DroneControl final {
       virtual void StopNow(::grpc::ClientContext* context, const ::drone::StopRequest* request, ::drone::StopReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, std::function<void(::grpc::Status)>) = 0;
       virtual void GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
@@ -77,6 +86,8 @@ class DroneControl final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::drone::StopReply>* PrepareAsyncStopNowRaw(::grpc::ClientContext* context, const ::drone::StopRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::drone::StatusReply>* AsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::drone::StatusReply>* PrepareAsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>* AsyncGetCommandStatusRaw(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::drone::CommandStatusReply>* PrepareAsyncGetCommandStatusRaw(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -102,6 +113,13 @@ class DroneControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::StatusReply>> PrepareAsyncGetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::StatusReply>>(PrepareAsyncGetStatusRaw(context, request, cq));
     }
+    ::grpc::Status GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::drone::CommandStatusReply* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>> AsyncGetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>>(AsyncGetCommandStatusRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>> PrepareAsyncGetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>>(PrepareAsyncGetCommandStatusRaw(context, request, cq));
+    }
     class async final :
       public StubInterface::async_interface {
      public:
@@ -111,6 +129,8 @@ class DroneControl final {
       void StopNow(::grpc::ClientContext* context, const ::drone::StopRequest* request, ::drone::StopReply* response, ::grpc::ClientUnaryReactor* reactor) override;
       void GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, std::function<void(::grpc::Status)>) override;
       void GetStatus(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response, std::function<void(::grpc::Status)>) override;
+      void GetCommandStatus(::grpc::ClientContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -128,9 +148,12 @@ class DroneControl final {
     ::grpc::ClientAsyncResponseReader< ::drone::StopReply>* PrepareAsyncStopNowRaw(::grpc::ClientContext* context, const ::drone::StopRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::drone::StatusReply>* AsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::drone::StatusReply>* PrepareAsyncGetStatusRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>* AsyncGetCommandStatusRaw(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::drone::CommandStatusReply>* PrepareAsyncGetCommandStatusRaw(::grpc::ClientContext* context, const ::drone::CommandStatusRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Enqueue_;
     const ::grpc::internal::RpcMethod rpcmethod_StopNow_;
     const ::grpc::internal::RpcMethod rpcmethod_GetStatus_;
+    const ::grpc::internal::RpcMethod rpcmethod_GetCommandStatus_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -141,6 +164,7 @@ class DroneControl final {
     virtual ::grpc::Status Enqueue(::grpc::ServerContext* context, const ::drone::Command* request, ::drone::CommandAck* response);
     virtual ::grpc::Status StopNow(::grpc::ServerContext* context, const ::drone::StopRequest* request, ::drone::StopReply* response);
     virtual ::grpc::Status GetStatus(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::drone::StatusReply* response);
+    virtual ::grpc::Status GetCommandStatus(::grpc::ServerContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_Enqueue : public BaseClass {
@@ -202,7 +226,27 @@ class DroneControl final {
       ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Enqueue<WithAsyncMethod_StopNow<WithAsyncMethod_GetStatus<Service > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodAsync(3);
+    }
+    ~WithAsyncMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestGetCommandStatus(::grpc::ServerContext* context, ::drone::CommandStatusRequest* request, ::grpc::ServerAsyncResponseWriter< ::drone::CommandStatusReply>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_Enqueue<WithAsyncMethod_StopNow<WithAsyncMethod_GetStatus<WithAsyncMethod_GetCommandStatus<Service > > > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_Enqueue : public BaseClass {
    private:
@@ -284,7 +328,34 @@ class DroneControl final {
     virtual ::grpc::ServerUnaryReactor* GetStatus(
       ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::drone::StatusReply* /*response*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_Enqueue<WithCallbackMethod_StopNow<WithCallbackMethod_GetStatus<Service > > > CallbackService;
+  template <class BaseClass>
+  class WithCallbackMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::drone::CommandStatusRequest, ::drone::CommandStatusReply>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::drone::CommandStatusRequest* request, ::drone::CommandStatusReply* response) { return this->GetCommandStatus(context, request, response); }));}
+    void SetMessageAllocatorFor_GetCommandStatus(
+        ::grpc::MessageAllocator< ::drone::CommandStatusRequest, ::drone::CommandStatusReply>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::drone::CommandStatusRequest, ::drone::CommandStatusReply>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~WithCallbackMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* GetCommandStatus(
+      ::grpc::CallbackServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/)  { return nullptr; }
+  };
+  typedef WithCallbackMethod_Enqueue<WithCallbackMethod_StopNow<WithCallbackMethod_GetStatus<WithCallbackMethod_GetCommandStatus<Service > > > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Enqueue : public BaseClass {
@@ -333,6 +404,23 @@ class DroneControl final {
     }
     // disable synchronous version of this method
     ::grpc::Status GetStatus(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::drone::StatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodGeneric(3);
+    }
+    ~WithGenericMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -395,6 +483,26 @@ class DroneControl final {
     }
     void RequestGetStatus(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodRaw(3);
+    }
+    ~WithRawMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestGetCommandStatus(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -461,6 +569,28 @@ class DroneControl final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* GetStatus(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithRawCallbackMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodRawCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetCommandStatus(context, request, response); }));
+    }
+    ~WithRawCallbackMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* GetCommandStatus(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
@@ -544,9 +674,36 @@ class DroneControl final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedGetStatus(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::google::protobuf::Empty,::drone::StatusReply>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_Enqueue<WithStreamedUnaryMethod_StopNow<WithStreamedUnaryMethod_GetStatus<Service > > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_GetCommandStatus : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_GetCommandStatus() {
+      ::grpc::Service::MarkMethodStreamed(3,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::drone::CommandStatusRequest, ::drone::CommandStatusReply>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::drone::CommandStatusRequest, ::drone::CommandStatusReply>* streamer) {
+                       return this->StreamedGetCommandStatus(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_GetCommandStatus() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status GetCommandStatus(::grpc::ServerContext* /*context*/, const ::drone::CommandStatusRequest* /*request*/, ::drone::CommandStatusReply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedGetCommandStatus(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::drone::CommandStatusRequest,::drone::CommandStatusReply>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_Enqueue<WithStreamedUnaryMethod_StopNow<WithStreamedUnaryMethod_GetStatus<WithStreamedUnaryMethod_GetCommandStatus<Service > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_Enqueue<WithStreamedUnaryMethod_StopNow<WithStreamedUnaryMethod_GetStatus<Service > > > StreamedService;
+  typedef WithStreamedUnaryMethod_Enqueue<WithStreamedUnaryMethod_StopNow<WithStreamedUnaryMethod_GetStatus<WithStreamedUnaryMethod_GetCommandStatus<Service > > > > StreamedService;
 };
 
 }  // namespace drone

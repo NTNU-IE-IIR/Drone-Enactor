@@ -91,5 +91,6 @@ add_dependencies(drone_client_demo drone_proto)
 add_executable(planner_cli
         src/planner_cli.cpp
 )
+target_include_directories(planner_cli PRIVATE ${GEN_DIR})
 target_link_libraries(planner_cli PRIVATE drone_proto gRPC::grpc++)
 add_dependencies(planner_cli drone_proto)
