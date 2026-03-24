@@ -31,6 +31,7 @@ enum CommandState {
   COMMAND_STATE_FAILED = 4;
   COMMAND_STATE_INTERRUPTED = 5;
   COMMAND_STATE_CANCELLED = 6;
+  COMMAND_STATE_RETRYING = 7;
 }
 
 message Command {
@@ -99,4 +100,6 @@ message CommandStatusReply {
   CommandState command_state = 3;
   string message = 4;
   ExecState controller_state = 5;
+  uint32 attempt_count = 6;
+  uint32 max_attempts = 7;
 }

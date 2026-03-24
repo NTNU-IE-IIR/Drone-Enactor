@@ -173,6 +173,7 @@ enum CommandState : int {
   COMMAND_STATE_FAILED = 4,
   COMMAND_STATE_INTERRUPTED = 5,
   COMMAND_STATE_CANCELLED = 6,
+  COMMAND_STATE_RETRYING = 7,
   CommandState_INT_MIN_SENTINEL_DO_NOT_USE_ =
       ::std::numeric_limits<::int32_t>::min(),
   CommandState_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -183,11 +184,11 @@ extern const uint32_t CommandState_internal_data_[];
 inline constexpr CommandState CommandState_MIN =
     static_cast<CommandState>(0);
 inline constexpr CommandState CommandState_MAX =
-    static_cast<CommandState>(6);
+    static_cast<CommandState>(7);
 [[nodiscard]] inline bool CommandState_IsValid(int value) {
-  return 0 <= value && value <= 6;
+  return 0 <= value && value <= 7;
 }
-inline constexpr int CommandState_ARRAYSIZE = 6 + 1;
+inline constexpr int CommandState_ARRAYSIZE = 7 + 1;
 [[nodiscard]] const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL
 CommandState_descriptor();
 [[nodiscard]] inline auto ProtobufInternalGetEnumDescriptor(CommandState) {
@@ -202,7 +203,7 @@ template <typename T>
 }
 template <>
 [[nodiscard]] inline const ::std::string& CommandState_Name(CommandState value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<CommandState_descriptor, 0, 6>(
+  return ::google::protobuf::internal::NameOfDenseEnum<CommandState_descriptor, 0, 7>(
       static_cast<int>(value));
 }
 [[nodiscard]] inline bool CommandState_Parse(
@@ -2028,6 +2029,8 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED CommandStatusReply final : public :
     kFoundFieldNumber = 2,
     kCommandStateFieldNumber = 3,
     kControllerStateFieldNumber = 5,
+    kAttemptCountFieldNumber = 6,
+    kMaxAttemptsFieldNumber = 7,
   };
   // string id = 1;
   void clear_id() ;
@@ -2089,11 +2092,31 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED CommandStatusReply final : public :
   void _internal_set_controller_state(::drone::ExecState value);
 
   public:
+  // uint32 attempt_count = 6;
+  void clear_attempt_count() ;
+  [[nodiscard]] ::uint32_t attempt_count() const;
+  void set_attempt_count(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_attempt_count() const;
+  void _internal_set_attempt_count(::uint32_t value);
+
+  public:
+  // uint32 max_attempts = 7;
+  void clear_max_attempts() ;
+  [[nodiscard]] ::uint32_t max_attempts() const;
+  void set_max_attempts(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_max_attempts() const;
+  void _internal_set_max_attempts(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:drone.CommandStatusReply)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 5,
+  static const ::google::protobuf::internal::TcParseTable<3, 7,
                                    0, 42,
                                    2>
       _table_;
@@ -2122,6 +2145,8 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED CommandStatusReply final : public :
     bool found_;
     int command_state_;
     int controller_state_;
+    ::uint32_t attempt_count_;
+    ::uint32_t max_attempts_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -4169,6 +4194,56 @@ inline ::drone::ExecState CommandStatusReply::_internal_controller_state() const
 inline void CommandStatusReply::_internal_set_controller_state(::drone::ExecState value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.controller_state_ = value;
+}
+
+// uint32 attempt_count = 6;
+inline void CommandStatusReply::clear_attempt_count() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attempt_count_ = 0u;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000020U);
+}
+inline ::uint32_t CommandStatusReply::attempt_count() const {
+  // @@protoc_insertion_point(field_get:drone.CommandStatusReply.attempt_count)
+  return _internal_attempt_count();
+}
+inline void CommandStatusReply::set_attempt_count(::uint32_t value) {
+  _internal_set_attempt_count(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  // @@protoc_insertion_point(field_set:drone.CommandStatusReply.attempt_count)
+}
+inline ::uint32_t CommandStatusReply::_internal_attempt_count() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.attempt_count_;
+}
+inline void CommandStatusReply::_internal_set_attempt_count(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.attempt_count_ = value;
+}
+
+// uint32 max_attempts = 7;
+inline void CommandStatusReply::clear_max_attempts() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.max_attempts_ = 0u;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000040U);
+}
+inline ::uint32_t CommandStatusReply::max_attempts() const {
+  // @@protoc_insertion_point(field_get:drone.CommandStatusReply.max_attempts)
+  return _internal_max_attempts();
+}
+inline void CommandStatusReply::set_max_attempts(::uint32_t value) {
+  _internal_set_max_attempts(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000040U);
+  // @@protoc_insertion_point(field_set:drone.CommandStatusReply.max_attempts)
+}
+inline ::uint32_t CommandStatusReply::_internal_max_attempts() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.max_attempts_;
+}
+inline void CommandStatusReply::_internal_set_max_attempts(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.max_attempts_ = value;
 }
 
 #ifdef __GNUC__

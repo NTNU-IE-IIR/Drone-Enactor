@@ -69,13 +69,17 @@ std::string FlightController::last_error() const
 
 void FlightController::set_command_status(const std::string& id,
                                           CommandState state,
-                                          std::string message)
+                                          std::string message,
+                                          std::uint32_t attempt_count,
+                                          std::uint32_t max_attempts)
 {
     std::lock_guard<std::mutex> lock(_command_status_mutex);
     _command_status[id] = CommandStatusSnapshot{
         true,
         state,
-        std::move(message)
+        std::move(message),
+        attempt_count,
+        max_attempts
     };
 }
 
@@ -289,15 +293,15 @@ bool FlightController::enqueue_hover(const std::string& id, double seconds)
 {
     if (seconds <= 0.0) {
         set_error("Hover seconds must be > 0");
-        set_command_status(id, CommandState::Failed, last_error());
+        set_command_status(id, CommandState::Failed, last_error(),0,0);
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({id, QueuedCommand::Type::Hover, seconds, 0.0});
+        _command_queue.push_back({id, QueuedCommand::Type::Hover, seconds, 0.0, 0,3});
     }
-    set_command_status(id, CommandState::Queued, "Queued");
+    set_command_status(id, CommandState::Queued, "Queued",0,0);
     _queue_cv.notify_one();
     return true;
 }
@@ -306,20 +310,20 @@ bool FlightController::enqueue_fly_forward(const std::string& id, double seconds
 {
     if (seconds <= 0.0) {
         set_error("Fly seconds must be > 0");
-        set_command_status(id, CommandState::Failed, last_error());
+        set_command_status(id, CommandState::Failed, last_error(),0,0);
         return false;
     }
     if (velocity_m_s == 0.0) {
         set_error("Velocity must be non-zero");
-        set_command_status(id, CommandState::Failed, last_error());
+        set_command_status(id, CommandState::Failed, last_error(),0,0);
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({id, QueuedCommand::Type::FlyForward, seconds, velocity_m_s});
+        _command_queue.push_back({id, QueuedCommand::Type::FlyForward, seconds, velocity_m_s,0,3});
     }
-    set_command_status(id, CommandState::Queued, "Queued");
+    set_command_status(id, CommandState::Queued, "Queued",0,0);
     _queue_cv.notify_one();
     return true;
 }
@@ -328,15 +332,15 @@ bool FlightController::enqueue_turn_yaw(const std::string& id, double degrees, d
 {
     if (seconds <= 0.0) {
         set_error("Turn seconds must be > 0");
-        set_command_status(id, CommandState::Failed, last_error());
+        set_command_status(id, CommandState::Failed, last_error(),0,0);
         return false;
     }
 
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({id, QueuedCommand::Type::TurnYaw, degrees, seconds});
+        _command_queue.push_back({id, QueuedCommand::Type::TurnYaw, degrees, seconds,0,3});
     }
-    set_command_status(id, CommandState::Queued, "Queued");
+    set_command_status(id, CommandState::Queued, "Queued",0,0);
     _queue_cv.notify_one();
     return true;
 }
@@ -345,11 +349,93 @@ bool FlightController::enqueue_land(const std::string& id)
 {
     {
         std::lock_guard<std::mutex> lock(_queue_mutex);
-        _command_queue.push_back({id, QueuedCommand::Type::Land, 0.0, 0.0});
+        _command_queue.push_back({id, QueuedCommand::Type::Land, 0.0, 0.0,0,3});
     }
-    set_command_status(id, CommandState::Queued, "Queued");
+    set_command_status(id, CommandState::Queued, "Queued",0,0);
     _queue_cv.notify_one();
     return true;
+}
+FlightController::ExecResult
+FlightController::execute_hover(double seconds)
+{
+    if (!check_health(10s,10s,10s,2s)) {
+        return {false,true,last_error()};
+    }
+
+    set_state(ExecState::Hovering);
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+
+    FlightController::ExecResult result;
+    if (check_if_interrupted(seconds, result)) return result;
+
+    return {true,false,"Succeeded"};
+}
+
+FlightController::ExecResult
+FlightController::execute_fly_forward(double seconds, double velocity_m_s)
+{
+    if (!check_health(10s,10s,10s,2s)) {
+        return {false,true,last_error()};
+    }
+
+    set_state(ExecState::ExecutingCommand);
+    set_cmd(static_cast<float>(velocity_m_s), 0.0f, 0.0f, 0.0f);
+
+    FlightController::ExecResult result;
+    if (check_if_interrupted(seconds, result)) return result;
+
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    set_state(ExecState::Hovering);
+    return {false,true,last_error()};
+}
+FlightController::ExecResult
+FlightController::execute_turn_yaw(double degrees, double seconds)
+{
+
+    if (!check_health(10s,10s,10s,2s)) {
+        return {false,true,last_error()};
+    }
+
+    set_state(ExecState::ExecutingCommand);
+    const float yaw_rate = static_cast<float>(degrees / seconds);
+    set_cmd(0.0f, 0.0f, 0.0f, yaw_rate);
+
+    FlightController::ExecResult result;
+    if (check_if_interrupted(seconds, result)) return result;
+
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    set_state(ExecState::Hovering);
+    return {true,false,"Succeeded"};
+}
+FlightController::ExecResult
+FlightController::execute_land()
+{
+    set_state(ExecState::Landing);
+    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+    stop_offboard_session_best_effort();
+
+    const auto result = _action.land();
+    if (result != mavsdk::Action::Result::Success) {
+        set_error(std::string("Land failed: ") + action_result_to_string(result));
+        return {false, true, last_error()};
+    }
+
+    const auto start = std::chrono::steady_clock::now();
+    while (_telemetry.in_air()) {
+        if (_interrupt_current.load()) {
+            return {false,false, "Interrupted"};
+        }
+
+        if (std::chrono::steady_clock::now() - start > 20s) {
+            set_error("Landing timeout: telemetry.in_air() stayed true");
+            return {false, true,"Stayed in air"};
+        }
+
+        std::this_thread::sleep_for(200ms);
+    }
+
+    set_state(ExecState::Idle);
+    return {true, false, "Succeeded"};
 }
 
 bool FlightController::request_stop()
@@ -367,7 +453,7 @@ bool FlightController::request_stop()
     }
 
     for (const auto& id : cancelled_ids) {
-        set_command_status(id, CommandState::Cancelled, "Cancelled by StopNow");
+        set_command_status(id, CommandState::Cancelled, "Cancelled by StopNow",0,0);
     }
 
     set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
@@ -422,146 +508,93 @@ void FlightController::worker_loop()
             _command_queue.pop_front();
         }
 
-        _interrupt_current.store(false);
         clear_error();
-        set_command_status(cmd.id, CommandState::Running, "Running");
+        _interrupt_current.store(false);
+        set_command_status(cmd.id, CommandState::Running, "Running",
+            cmd.attempt_count,cmd.max_attempts);
 
-        bool ok = false;
-        switch (cmd.type) {
-            case QueuedCommand::Type::Hover:
-                ok = execute_hover(cmd.a);
-                break;
-            case QueuedCommand::Type::FlyForward:
-                ok = execute_fly_forward(cmd.a, cmd.b);
-                break;
-            case QueuedCommand::Type::TurnYaw:
-                ok = execute_turn_yaw(cmd.a, cmd.b);
-                break;
-            case QueuedCommand::Type::Land:
-                ok = execute_land();
-                break;
-        }
+        while (cmd.attempt_count < cmd.max_attempts) {
+            clear_error();
+            _interrupt_current.store(false);
 
-        if (!ok) {
+            const ExecResult result = execute_command(cmd);
+
+            if (result.ok) {
+                set_command_status(cmd.id, CommandState::Succeeded,
+                    result.message,cmd.attempt_count,cmd.max_attempts);
+
+                if (_state.load() != ExecState::EmergencyStopped) {
+                    set_state(_telemetry.in_air() ? ExecState::Hovering : ExecState::Idle);
+                }
+                break;
+            }
+
             if (_interrupt_current.load()) {
-                set_command_status(cmd.id, CommandState::Interrupted, "Interrupted");
-            } else {
-                set_command_status(cmd.id, CommandState::Failed, last_error());
+                set_command_status(cmd.id, CommandState::Interrupted, "Interrupted",
+                    cmd.attempt_count,cmd.max_attempts);
+                break;
             }
 
-            if (_state.load() != ExecState::EmergencyStopped) {
-                set_state(ExecState::Error);
+            cmd.attempt_count++;
+
+            if (!result.retryable || cmd.attempt_count >= cmd.max_attempts) {
+                set_command_status(cmd.id, CommandState::Failed, result.message);
+
+                if (_state.load() != ExecState::EmergencyStopped) {
+                    set_state(ExecState::Error);
+                }
+                break;
             }
-            continue;
-        }
 
-        set_command_status(cmd.id, CommandState::Succeeded, "Succeeded");
+            set_command_status(
+                cmd.id,
+                CommandState::Retrying,
+                "Request failed, trying again (" +
+                    std::to_string(cmd.attempt_count + 1) + "/" +
+                    std::to_string(cmd.max_attempts) + "): " +
+                    result.message,cmd.attempt_count,cmd.max_attempts
+            );
 
-        if (_telemetry.in_air()) {
-            set_state(ExecState::Hovering);
-        } else {
-            set_state(ExecState::Idle);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            set_command_status(cmd.id, CommandState::Running, "Running",cmd.attempt_count,cmd.max_attempts);
         }
     }
 }
 
-bool FlightController::execute_hover(double seconds)
-{
-    if (!ensure_armed(10s)) return false;
-    if (!ensure_airborne(10s)) return false;
-    if (!wait_until_ready_for_offboard(10s)) return false;
-    if (!start_offboard_session(2s)) return false;
+FlightController::ExecResult
+FlightController::execute_command(const QueuedCommand& cmd) {
+    switch (cmd.type) {
+        case QueuedCommand::Type::Hover:
+            return execute_hover(cmd.a);
+        case QueuedCommand::Type::Land:
+            return execute_land();
+        case QueuedCommand::Type::FlyForward:
+            return execute_fly_forward(cmd.a,cmd.b);
+        case QueuedCommand::Type::TurnYaw:
+            return execute_fly_forward(cmd.a,cmd.b);
+    }
+    return{false,false,"Unknown command type"};
+}
 
-    set_state(ExecState::Hovering);
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
+bool FlightController::check_health(std::chrono::seconds ensure_armed_s, std::chrono::seconds ensure_airborne_s
+    , std::chrono::seconds wait_offboard_s, std::chrono::seconds start_offboard_s) {
+    if (!ensure_armed(ensure_armed_s)) return false;
+    if (!ensure_airborne(ensure_airborne_s)) return false;
+    if (!wait_until_ready_for_offboard(wait_offboard_s)) return false;
+    if (!start_offboard_session(start_offboard_s)) return false;
+    return true;
+}
 
+bool FlightController::check_if_interrupted(double seconds, FlightController::ExecResult &result) {
     const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
     while (std::chrono::steady_clock::now() < end) {
         if (_interrupt_current.load()) {
             set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-            return false;
+            result = {false,false,"Interrupted"};
+            return true;
         }
         std::this_thread::sleep_for(kStreamPeriod);
     }
-
-    return true;
+    return false;
 }
 
-bool FlightController::execute_fly_forward(double seconds, double velocity_m_s)
-{
-    if (!ensure_armed(10s)) return false;
-    if (!ensure_airborne(10s)) return false;
-    if (!wait_until_ready_for_offboard(10s)) return false;
-    if (!start_offboard_session(2s)) return false;
-
-    set_state(ExecState::ExecutingCommand);
-    set_cmd(static_cast<float>(velocity_m_s), 0.0f, 0.0f, 0.0f);
-
-    const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
-    while (std::chrono::steady_clock::now() < end) {
-        if (_interrupt_current.load()) {
-            set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-            return false;
-        }
-        std::this_thread::sleep_for(kStreamPeriod);
-    }
-
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-    set_state(ExecState::Hovering);
-    return true;
-}
-
-bool FlightController::execute_turn_yaw(double degrees, double seconds)
-{
-    if (!ensure_armed(10s)) return false;
-    if (!ensure_airborne(10s)) return false;
-    if (!wait_until_ready_for_offboard(10s)) return false;
-    if (!start_offboard_session(2s)) return false;
-
-    set_state(ExecState::ExecutingCommand);
-    const float yaw_rate = static_cast<float>(degrees / seconds);
-    set_cmd(0.0f, 0.0f, 0.0f, yaw_rate);
-
-    const auto end = std::chrono::steady_clock::now() + std::chrono::duration<double>(seconds);
-    while (std::chrono::steady_clock::now() < end) {
-        if (_interrupt_current.load()) {
-            set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-            return false;
-        }
-        std::this_thread::sleep_for(kStreamPeriod);
-    }
-
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-    set_state(ExecState::Hovering);
-    return true;
-}
-
-bool FlightController::execute_land()
-{
-    set_state(ExecState::Landing);
-    set_cmd(0.0f, 0.0f, 0.0f, 0.0f);
-    stop_offboard_session_best_effort();
-
-    const auto result = _action.land();
-    if (result != mavsdk::Action::Result::Success) {
-        set_error(std::string("Land failed: ") + action_result_to_string(result));
-        return false;
-    }
-
-    const auto start = std::chrono::steady_clock::now();
-    while (_telemetry.in_air()) {
-        if (_interrupt_current.load()) {
-            return false;
-        }
-
-        if (std::chrono::steady_clock::now() - start > 20s) {
-            set_error("Landing timeout: telemetry.in_air() stayed true");
-            return false;
-        }
-
-        std::this_thread::sleep_for(200ms);
-    }
-
-    set_state(ExecState::Idle);
-    return true;
-}

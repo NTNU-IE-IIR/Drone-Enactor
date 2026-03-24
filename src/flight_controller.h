@@ -37,7 +37,8 @@ public:
         Succeeded,
         Failed,
         Interrupted,
-        Cancelled
+        Cancelled,
+        Retrying
     };
 
     struct StatusSnapshot {
@@ -54,6 +55,13 @@ public:
     struct CommandStatusSnapshot {
         bool found{false};
         CommandState state{CommandState::Unknown};
+        std::string message{};
+        std::uint32_t attempt_count{0};
+        std::uint32_t max_attempts{0};
+    };
+    struct ExecResult {
+        bool ok{false};
+        bool retryable{false};
         std::string message{};
     };
 
@@ -85,22 +93,28 @@ private:
         Type type;
         double a{0.0};
         double b{0.0};
+        int attempt_count;
+        int max_attempts = 3;
+        std::string last_error;
     };
 
     void set_state(ExecState new_state);
     void set_error(std::string msg);
     void clear_error();
 
-    void set_command_status(const std::string& id, CommandState state, std::string message);
+    void set_command_status(const std::string& id, CommandState state,
+        std::string message,std::uint32_t attempt_count = 0, std::uint32_t max_attempts = 0);
 
     void worker_loop();
     void start_worker();
     void stop_worker();
 
-    bool execute_hover(double seconds);
-    bool execute_fly_forward(double seconds, double velocity_m_s);
-    bool execute_turn_yaw(double degrees, double seconds);
-    bool execute_land();
+    ExecResult execute_command(const QueuedCommand& cmd);
+
+    ExecResult execute_hover(double seconds);
+    ExecResult execute_fly_forward(double seconds, double velocity_m_s);
+    ExecResult execute_turn_yaw(double degrees, double seconds);
+    ExecResult execute_land();
 
     bool ensure_armed(std::chrono::seconds timeout);
     bool ensure_airborne(std::chrono::seconds timeout);
@@ -111,6 +125,10 @@ private:
     void start_streaming_thread();
     void stop_streaming_thread();
     void offboard_stream_loop();
+    bool check_health(std::chrono::seconds ensure_armed_s, std::chrono::seconds ensure_airborne_s
+    , std::chrono::seconds wait_offboard_s, std::chrono::seconds start_offboard_s);
+
+    bool check_if_interrupted(double seconds, ExecResult &value1);
 
     void set_cmd(float forward_m_s, float right_m_s, float down_m_s, float yawspeed_deg_s);
     mavsdk::Offboard::VelocityBodyYawspeed get_cmd_copy() const;

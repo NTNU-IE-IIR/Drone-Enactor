@@ -49,6 +49,8 @@ drone::CommandState DroneControlService::to_proto_command_state(FlightController
             return drone::COMMAND_STATE_INTERRUPTED;
         case FlightController::CommandState::Cancelled:
             return drone::COMMAND_STATE_CANCELLED;
+        case FlightController::CommandState::Retrying:
+            return drone::COMMAND_STATE_RETRYING;
     }
 
     return drone::COMMAND_STATE_UNKNOWN;

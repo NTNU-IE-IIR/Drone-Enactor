@@ -12,13 +12,10 @@ list(PREPEND CMAKE_PREFIX_PATH
 list(APPEND CMAKE_IGNORE_PREFIX_PATH "/usr/local")
 list(APPEND CMAKE_IGNORE_PATH "/usr/local" "/usr/local/include" "/usr/local/lib")
 
-
-list(PREPEND CMAKE_PREFIX_PATH "/opt/homebrew" "/opt/homebrew/opt/abseil")
 set(CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH OFF)
 set(CMAKE_FIND_USE_PACKAGE_REGISTRY OFF)
 
 find_package(absl CONFIG REQUIRED)
-
 
 if(NOT TARGET absl::absl_check)
     if(TARGET absl::check)
@@ -35,8 +32,10 @@ endif()
 
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
+
 set(MAVSDK_DIR "/opt/homebrew/lib/cmake/MAVSDK")
 find_package(MAVSDK REQUIRED CONFIG)
+
 get_target_property(MAVSDK_INCLUDE_DIRS MAVSDK::mavsdk INTERFACE_INCLUDE_DIRECTORIES)
 message(STATUS "MAVSDK include dirs: ${MAVSDK_INCLUDE_DIRS}")
 
@@ -44,32 +43,43 @@ set(PROTO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
 set(PROTO_FILE "${PROTO_DIR}/drone_control.proto")
 set(GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
-add_custom_command(
-        OUTPUT
+file(MAKE_DIRECTORY ${GEN_DIR})
+
+set(PROTO_SRCS
         "${GEN_DIR}/drone_control.pb.cc"
-        "${GEN_DIR}/drone_control.pb.h"
         "${GEN_DIR}/drone_control.grpc.pb.cc"
+)
+
+set(PROTO_HDRS
+        "${GEN_DIR}/drone_control.pb.h"
         "${GEN_DIR}/drone_control.grpc.pb.h"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${GEN_DIR}"
+)
+
+add_custom_command(
+        OUTPUT ${PROTO_SRCS} ${PROTO_HDRS}
         COMMAND /opt/homebrew/bin/protoc
         ARGS
-        -I "${PROTO_DIR}"
+        -I ${PROTO_DIR}
         --cpp_out=${GEN_DIR}
         --grpc_out=${GEN_DIR}
         --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
-        "${PROTO_FILE}"
-        DEPENDS "${PROTO_FILE}"
+        ${PROTO_FILE}
+        DEPENDS ${PROTO_FILE}
         VERBATIM
 )
 
-add_library(drone_proto
-        "${GEN_DIR}/drone_control.pb.cc"
-        "${GEN_DIR}/drone_control.grpc.pb.cc"
+add_custom_target(generate_proto ALL
+        DEPENDS ${PROTO_SRCS} ${PROTO_HDRS}
 )
+
+add_library(drone_proto
+        ${PROTO_SRCS}
+        ${PROTO_HDRS}
+)
+add_dependencies(drone_proto generate_proto)
 target_include_directories(drone_proto PUBLIC "${GEN_DIR}")
 target_link_libraries(drone_proto PUBLIC protobuf::libprotobuf gRPC::grpc++)
 
-# ---- Server executable ----
 add_executable(drone_api_server
         src/server_main.cpp
         src/drone_control_service.cpp
@@ -80,14 +90,12 @@ add_executable(drone_api_server
 target_link_libraries(drone_api_server PRIVATE drone_proto MAVSDK::mavsdk)
 add_dependencies(drone_api_server drone_proto)
 
-# ---- Client demo executable ----
 add_executable(drone_client_demo
         src/client_demo.cpp
 )
 target_link_libraries(drone_client_demo PRIVATE drone_proto gRPC::grpc++)
 add_dependencies(drone_client_demo drone_proto)
 
-# ---- Planner CLI executable (separat main) ----
 add_executable(planner_cli
         src/planner_cli.cpp
 )

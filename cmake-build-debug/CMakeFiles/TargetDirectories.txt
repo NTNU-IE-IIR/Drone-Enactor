@@ -1,3 +1,4 @@
+/Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug/CMakeFiles/generate_proto.dir
 /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug/CMakeFiles/drone_proto.dir
 /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug/CMakeFiles/drone_api_server.dir
 /Users/49kotosk/CLionProjects/BachelorProsjektAPI/cmake-build-debug/CMakeFiles/drone_client_demo.dir

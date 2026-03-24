@@ -258,7 +258,9 @@ inline constexpr CommandStatusReply::Impl_::Impl_(
             ::_pbi::ConstantInitialized()),
         found_{false},
         command_state_{static_cast< ::drone::CommandState >(0)},
-        controller_state_{static_cast< ::drone::ExecState >(0)} {}
+        controller_state_{static_cast< ::drone::ExecState >(0)},
+        attempt_count_{0u},
+        max_attempts_{0u} {}
 
 template <typename>
 constexpr CommandStatusReply::CommandStatusReply(::_pbi::ConstantInitialized)
@@ -439,17 +441,21 @@ const ::uint32_t
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_._has_bits_),
-        8, // hasbit index offset
+        10, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.found_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.command_state_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.message_),
         PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.controller_state_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.attempt_count_),
+        PROTOBUF_FIELD_OFFSET(::drone::CommandStatusReply, _impl_.max_attempts_),
         0,
         2,
         3,
         1,
         4,
+        5,
+        6,
 };
 
 static const ::_pbi::MigrationSchema
@@ -501,26 +507,28 @@ const char descriptor_table_protodef_drone_5fcontrol_2eproto[] ABSL_ATTRIBUTE_SE
     "\030\003 \001(\010\022\r\n\005armed\030\004 \001(\010\022\016\n\006in_air\030\005 \001(\010\022\033\n"
     "\023relative_altitude_m\030\006 \001(\002\022\023\n\013flight_mod"
     "e\030\007 \001(\005\022\022\n\nqueue_size\030\010 \001(\r\"\"\n\024CommandSt"
-    "atusRequest\022\n\n\002id\030\001 \001(\t\"\230\001\n\022CommandStatu"
+    "atusRequest\022\n\n\002id\030\001 \001(\t\"\305\001\n\022CommandStatu"
     "sReply\022\n\n\002id\030\001 \001(\t\022\r\n\005found\030\002 \001(\010\022*\n\rcom"
     "mand_state\030\003 \001(\0162\023.drone.CommandState\022\017\n"
     "\007message\030\004 \001(\t\022*\n\020controller_state\030\005 \001(\016"
-    "2\020.drone.ExecState*\224\001\n\tExecState\022\020\n\014DISC"
-    "ONNECTED\020\000\022\010\n\004IDLE\020\001\022\n\n\006ARMING\020\002\022\r\n\tTAKI"
-    "NGOFF\020\003\022\014\n\010HOVERING\020\004\022\024\n\020EXECUTINGCOMMAN"
-    "D\020\005\022\013\n\007LANDING\020\006\022\024\n\020EMERGENCYSTOPPED\020\007\022\t"
-    "\n\005ERROR\020\010*\321\001\n\014CommandState\022\031\n\025COMMAND_ST"
-    "ATE_UNKNOWN\020\000\022\030\n\024COMMAND_STATE_QUEUED\020\001\022"
-    "\031\n\025COMMAND_STATE_RUNNING\020\002\022\033\n\027COMMAND_ST"
-    "ATE_SUCCEEDED\020\003\022\030\n\024COMMAND_STATE_FAILED\020"
-    "\004\022\035\n\031COMMAND_STATE_INTERRUPTED\020\005\022\033\n\027COMM"
-    "AND_STATE_CANCELLED\020\0062\362\001\n\014DroneControl\022,"
-    "\n\007Enqueue\022\016.drone.Command\032\021.drone.Comman"
-    "dAck\022/\n\007StopNow\022\022.drone.StopRequest\032\020.dr"
-    "one.StopReply\0227\n\tGetStatus\022\026.google.prot"
-    "obuf.Empty\032\022.drone.StatusReply\022J\n\020GetCom"
-    "mandStatus\022\033.drone.CommandStatusRequest\032"
-    "\031.drone.CommandStatusReplyb\006proto3"
+    "2\020.drone.ExecState\022\025\n\rattempt_count\030\006 \001("
+    "\r\022\024\n\014max_attempts\030\007 \001(\r*\224\001\n\tExecState\022\020\n"
+    "\014DISCONNECTED\020\000\022\010\n\004IDLE\020\001\022\n\n\006ARMING\020\002\022\r\n"
+    "\tTAKINGOFF\020\003\022\014\n\010HOVERING\020\004\022\024\n\020EXECUTINGC"
+    "OMMAND\020\005\022\013\n\007LANDING\020\006\022\024\n\020EMERGENCYSTOPPE"
+    "D\020\007\022\t\n\005ERROR\020\010*\355\001\n\014CommandState\022\031\n\025COMMA"
+    "ND_STATE_UNKNOWN\020\000\022\030\n\024COMMAND_STATE_QUEU"
+    "ED\020\001\022\031\n\025COMMAND_STATE_RUNNING\020\002\022\033\n\027COMMA"
+    "ND_STATE_SUCCEEDED\020\003\022\030\n\024COMMAND_STATE_FA"
+    "ILED\020\004\022\035\n\031COMMAND_STATE_INTERRUPTED\020\005\022\033\n"
+    "\027COMMAND_STATE_CANCELLED\020\006\022\032\n\026COMMAND_ST"
+    "ATE_RETRYING\020\0072\362\001\n\014DroneControl\022,\n\007Enque"
+    "ue\022\016.drone.Command\032\021.drone.CommandAck\022/\n"
+    "\007StopNow\022\022.drone.StopRequest\032\020.drone.Sto"
+    "pReply\0227\n\tGetStatus\022\026.google.protobuf.Em"
+    "pty\032\022.drone.StatusReply\022J\n\020GetCommandSta"
+    "tus\022\033.drone.CommandStatusRequest\032\031.drone"
+    ".CommandStatusReplyb\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_drone_5fcontrol_2eproto_deps[1] = {
@@ -530,7 +538,7 @@ static ::absl::once_flag descriptor_table_drone_5fcontrol_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_drone_5fcontrol_2eproto = {
     false,
     false,
-    1594,
+    1667,
     descriptor_table_protodef_drone_5fcontrol_2eproto,
     "drone_control.proto",
     &descriptor_table_drone_5fcontrol_2eproto_once,
@@ -557,7 +565,7 @@ CommandState_descriptor() {
   return file_level_enum_descriptors_drone_5fcontrol_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t CommandState_internal_data_[] = {
-    458752u, 0u, };
+    524288u, 0u, };
 // ===================================================================
 
 class Command::_Internal {
@@ -3870,9 +3878,9 @@ CommandStatusReply::CommandStatusReply(
                offsetof(Impl_, found_),
            reinterpret_cast<const char*>(&from._impl_) +
                offsetof(Impl_, found_),
-           offsetof(Impl_, controller_state_) -
+           offsetof(Impl_, max_attempts_) -
                offsetof(Impl_, found_) +
-               sizeof(Impl_::controller_state_));
+               sizeof(Impl_::max_attempts_));
 
   // @@protoc_insertion_point(copy_constructor:drone.CommandStatusReply)
 }
@@ -3888,9 +3896,9 @@ inline void CommandStatusReply::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, found_),
            0,
-           offsetof(Impl_, controller_state_) -
+           offsetof(Impl_, max_attempts_) -
                offsetof(Impl_, found_) +
-               sizeof(Impl_::controller_state_));
+               sizeof(Impl_::max_attempts_));
 }
 CommandStatusReply::~CommandStatusReply() {
   // @@protoc_insertion_point(destructor:drone.CommandStatusReply)
@@ -3950,16 +3958,16 @@ CommandStatusReply::GetClassData() const {
   return CommandStatusReply_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 0, 42, 2>
+const ::_pbi::TcParseTable<3, 7, 0, 42, 2>
 CommandStatusReply::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    7, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    7,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     CommandStatusReply_class_data_.base(),
@@ -3990,8 +3998,14 @@ CommandStatusReply::_table_ = {
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandStatusReply, _impl_.controller_state_), 4>(),
      {40, 4, 0,
       PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_)}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // uint32 attempt_count = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandStatusReply, _impl_.attempt_count_), 5>(),
+     {48, 5, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.attempt_count_)}},
+    // uint32 max_attempts = 7;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CommandStatusReply, _impl_.max_attempts_), 6>(),
+     {56, 6, 0,
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.max_attempts_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -4005,6 +4019,10 @@ CommandStatusReply::_table_ = {
     {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.message_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .drone.ExecState controller_state = 5;
     {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // uint32 attempt_count = 6;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.attempt_count_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // uint32 max_attempts = 7;
+    {PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.max_attempts_), _Internal::kHasBitsOffset + 6, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
@@ -4030,10 +4048,10 @@ PROTOBUF_NOINLINE void CommandStatusReply::Clear() {
       _impl_.message_.ClearNonDefaultToEmpty();
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001cU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007cU)) {
     ::memset(&_impl_.found_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.controller_state_) -
-        reinterpret_cast<char*>(&_impl_.found_)) + sizeof(_impl_.controller_state_));
+        reinterpret_cast<char*>(&_impl_.max_attempts_) -
+        reinterpret_cast<char*>(&_impl_.found_)) + sizeof(_impl_.max_attempts_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -4105,6 +4123,24 @@ PROTOBUF_NOINLINE void CommandStatusReply::Clear() {
     }
   }
 
+  // uint32 attempt_count = 6;
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+    if (this_._internal_attempt_count() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          6, this_._internal_attempt_count(), target);
+    }
+  }
+
+  // uint32 max_attempts = 7;
+  if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+    if (this_._internal_max_attempts() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          7, this_._internal_max_attempts(), target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -4130,7 +4166,7 @@ PROTOBUF_NOINLINE void CommandStatusReply::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
     // string id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_id().empty()) {
@@ -4165,6 +4201,20 @@ PROTOBUF_NOINLINE void CommandStatusReply::Clear() {
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_controller_state());
       }
     }
+    // uint32 attempt_count = 6;
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (this_._internal_attempt_count() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+            this_._internal_attempt_count());
+      }
+    }
+    // uint32 max_attempts = 7;
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      if (this_._internal_max_attempts() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+            this_._internal_max_attempts());
+      }
+    }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
                                              &this_._impl_._cached_size_);
@@ -4184,7 +4234,7 @@ void CommandStatusReply::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!from._internal_id().empty()) {
         _this->_internal_set_id(from._internal_id());
@@ -4218,6 +4268,16 @@ void CommandStatusReply::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.controller_state_ = from._impl_.controller_state_;
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (from._internal_attempt_count() != 0) {
+        _this->_impl_.attempt_count_ = from._impl_.attempt_count_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      if (from._internal_max_attempts() != 0) {
+        _this->_impl_.max_attempts_ = from._impl_.max_attempts_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -4241,8 +4301,8 @@ void CommandStatusReply::InternalSwap(CommandStatusReply* PROTOBUF_RESTRICT PROT
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.id_, &other->_impl_.id_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.message_, &other->_impl_.message_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.controller_state_)
-      + sizeof(CommandStatusReply::_impl_.controller_state_)
+      PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.max_attempts_)
+      + sizeof(CommandStatusReply::_impl_.max_attempts_)
       - PROTOBUF_FIELD_OFFSET(CommandStatusReply, _impl_.found_)>(
           reinterpret_cast<char*>(&_impl_.found_),
           reinterpret_cast<char*>(&other->_impl_.found_));
